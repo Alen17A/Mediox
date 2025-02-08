@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/screens/audio_playback.dart';
+import 'package:mediox/screens/audios_home.dart';
 
 class FloatingBottomNavBar extends StatefulWidget {
   const FloatingBottomNavBar({super.key});
@@ -37,10 +37,10 @@ class _FloatingBottomNavBarState extends State<FloatingBottomNavBar> {
                     borderRadius: BorderRadius.circular(10)),
                 child: TextButton.icon(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AudioPlayback()));
+                            builder: (context) => const AudioHome()));
                   },
                   label: const Text(
                     "Audios",

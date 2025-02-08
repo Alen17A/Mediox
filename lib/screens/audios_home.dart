@@ -1,29 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mediox/data/functions/store_fetch_audios.dart';
+import 'package:mediox/data/models/audio_model.dart';
+import 'package:mediox/screens/audio_playback.dart';
+import 'package:mediox/services/provider/recently_played.dart';
 import 'package:mediox/widgets/floating_bottom_navbar.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
-class AudioHome extends StatefulWidget {
+class AudioHome extends StatelessWidget {
   const AudioHome({super.key});
-
-  @override
-  State<AudioHome> createState() => _AudioHomeState();
-}
-
-class _AudioHomeState extends State<AudioHome> {
-  final OnAudioQuery _audioQuery = OnAudioQuery();
-  bool _hasPermission = false;
-
-  @override
-  void initState() {
-    super.initState();
-    checkPermissions();
-  }
-
-  checkPermissions({bool retry = false}) async {
-    _hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
-
-    _hasPermission ? setState(() {}) : null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,11 +61,26 @@ class _AudioHomeState extends State<AudioHome> {
                   child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const AudioHome())),
-                child: Image.asset("assets/images/MEDIOX.png"),
+                child: Image.asset("assets/images/MEDIOX_2.png"),
               )),
               ListTile(
                 title: const Text("Settings"),
                 trailing: const Icon(Icons.settings),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text("Help"),
+                trailing: const Icon(Icons.help),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text("Contact Us"),
+                trailing: const Icon(Icons.call),
+                onTap: () {},
+              ),
+              ListTile(
+                title: const Text("About Us"),
+                trailing: const Icon(Icons.person),
                 onTap: () {},
               )
             ],
@@ -89,66 +89,134 @@ class _AudioHomeState extends State<AudioHome> {
         body: Stack(
           children: [
             TabBarView(children: [
-              !_hasPermission
-                  ? Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 179, 82, 75),
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Column(
-                        children: [
-                          const Text(
-                              "Mediox currently do not has the permission to access your media. Please allow to grant permission."),
-                          ElevatedButton(
-                              onPressed: () => checkPermissions(retry: true),
-                              child: const Text("Allow"))
-                        ],
-                      ),
-                    )
-                  : FutureBuilder<List<SongModel>>(
-                      future: _audioQuery.querySongs(),
-                      builder: (context, item) {
-                        if (item.hasError) {
-                          item.error.toString();
-                        }
-                        if (item.data == null) {
-                          return const CircularProgressIndicator();
-                        }
-                        if (item.data!.isEmpty) {
-                          return const Text("Nothing Found!!");
-                        }
-                        return ListView.builder(
-                          itemCount: item.data!.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                    child: Row(
-                                  children: [
-                                    const Icon(Icons.music_note),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Text(item.data![index].title,
-                                              style: const TextStyle(
-                                                  fontSize: 24)),
-                                          Text(
-                                            item.data![index].artist!,
-                                            style:
-                                                const TextStyle(fontSize: 18),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const Icon(Icons.more_vert),
-                                  ],
-                                )),
-                              ),
-                            );
+              FutureBuilder(
+                  future: getSongs(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError ||
+                        !snapshot.hasData ||
+                        snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No songs found.'));
+                    }
+                    List<AudioModel> songs = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: songs.length,
+                      itemBuilder: (context, index) {
+                        // var song = songs[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AudioPlayback(
+                                          audioFile: songs,
+                                          index: index,
+                                        )));
                           },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                                surfaceTintColor: Colors.green,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      QueryArtworkWidget(
+                                        id: songs[index].audioId,
+                                        type: ArtworkType.AUDIO,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(songs[index].title,
+                                                style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold),
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,),
+                                            Text(
+                                              songs[index].artist,
+                                              style:
+                                                  const TextStyle(fontSize: 16),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      const Icon(Icons.more_vert),
+                                    ],
+                                  ),
+                                )),
+                          ),
                         );
-                      }),
-              const Icon(Icons.music_note),
+                      },
+                    );
+                  }),
+              Consumer<RecentlyPlayedProvider>(
+                  builder: (context, recentlyPlayedProvider, _) {
+                if (recentlyPlayedProvider.recentlySongs.isEmpty) {
+                  return const Center(child: Text('No recents found.'));
+                }
+                List<AudioModel> songs = recentlyPlayedProvider.recentlySongs;
+                return ListView.builder(
+                  itemCount: songs.length,
+                  itemBuilder: (context, index) {
+                    // var song = songs[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AudioPlayback(
+                                      audioFile: songs,
+                                      index: index,
+                                    )));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                            surfaceTintColor: Colors.blue,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  QueryArtworkWidget(
+                                    id: songs[index].audioId,
+                                    type: ArtworkType.AUDIO,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          songs[index].title,
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          songs[index].artist,
+                                          style: const TextStyle(fontSize: 16),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.more_vert),
+                                ],
+                              ),
+                            )),
+                      ),
+                    );
+                  },
+                );
+              }),
               const Icon(Icons.music_note),
               const Icon(Icons.music_note)
             ]),
