@@ -29,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> splash(BuildContext ctx) async {
     await fetchMP3SongsWithHive();
-    Provider.of<RecentlyPlayedProvider>(context, listen: false).getRecentlySongsProvider();
+    Provider.of<RecentlyPlayedProvider>(context, listen: false)
+        .getRecentlySongsProvider();
     Navigator.pushReplacement(
         ctx, MaterialPageRoute(builder: (context) => const AudioHome()));
   }

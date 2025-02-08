@@ -23,11 +23,12 @@ class AudioModel {
   @HiveField(5)
   final Uint8List? audioImage;
 
-  AudioModel( 
-      {required this.audioPath,
-      required this.title,
-      required this.artist,
-      required this.totalDuration,
-      required this.audioId, this.audioImage,
+  AudioModel({
+    required this.audioPath,
+    required this.title,
+    required this.artist,
+    required this.totalDuration,
+    required this.audioId,
+    this.audioImage,
   });
 }

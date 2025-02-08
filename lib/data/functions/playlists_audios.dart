@@ -36,7 +36,7 @@ Future<void> addSongToPlaylist(
           ]);
 
       await playlistModelAudioBox.put(playlistId, playlistModel);
-    }else{
+    } else {
       AudioPlaylistModel playlistModel = AudioPlaylistModel(
           playlistId: playlistId,
           playlistName: playlistName,

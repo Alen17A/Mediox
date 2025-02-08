@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  if (!Hive.isAdapterRegistered(AudioModelAdapter().typeId) || !Hive.isAdapterRegistered(AudioPlaylistModelAdapter().typeId)) {
+  if (!Hive.isAdapterRegistered(AudioModelAdapter().typeId) ||
+      !Hive.isAdapterRegistered(AudioPlaylistModelAdapter().typeId)) {
     Hive.registerAdapter(AudioModelAdapter());
     Hive.registerAdapter(AudioPlaylistModelAdapter());
   }
@@ -27,7 +28,11 @@ class Mediox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => RecentlyPlayedProvider(),)],
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => RecentlyPlayedProvider(),
+        )
+      ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),

@@ -31,19 +31,17 @@ Future<void> fetchMP3SongsWithHive() async {
 
     for (var song in mp3Songs) {
       var audioModel = AudioModel(
-          audioPath: song.data,
-          title: song.title,
-          artist: song.artist ?? 'Unknown',
-          totalDuration: song.duration!,
-          audioId: song.id,
-          );
+        audioPath: song.data,
+        title: song.title,
+        artist: song.artist ?? 'Unknown',
+        totalDuration: song.duration!,
+        audioId: song.id,
+      );
       if (!checkSong(audioModel.audioId)) {
         await audioBox.put(audioModel.audioId, audioModel);
       }
     }
-  } else {
-  
-  }
+  } else {}
 }
 
 bool checkSong(int songId) {
