@@ -3,18 +3,6 @@ import 'package:mediox/data/models/audio_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 late LazyBox<AudioModel> audioBox;
-final OnAudioQuery _audioQuery = OnAudioQuery();
-
-Future<List<AudioModel>> getSongs() async {
-  List<AudioModel> audios = [];
-  for (int key in audioBox.keys) {
-    AudioModel? audioModel = await audioBox.get(key);
-    if (audioModel != null) {
-      audios.add(audioModel);
-    }
-  }
-  return audios;
-}
 
 Future<void> fetchMP3SongsWithHive() async {
   OnAudioQuery audioQuery = OnAudioQuery();
@@ -24,6 +12,7 @@ Future<void> fetchMP3SongsWithHive() async {
   if (hasPermission) {
     var allSongs = await audioQuery.querySongs(
       sortType: SongSortType.DATE_ADDED,
+      // path: "/storage/emulated/0/Music"
     );
     var mp3Songs = allSongs.where((song) {
       return song.fileExtension == "mp3";
@@ -41,20 +30,58 @@ Future<void> fetchMP3SongsWithHive() async {
         await audioBox.put(audioModel.audioId, audioModel);
       }
     }
-  } else {}
+  }
 }
 
 bool checkSong(int songId) {
   return audioBox.containsKey(songId);
 }
 
-Future<List<SongModel>> fetchMP3SongsWithoutHive() async {
-  var allSongs = await _audioQuery.querySongs(
-    sortType: SongSortType.DATE_ADDED,
-  );
-  var mp3Songs = allSongs.where((song) {
-    return song.fileExtension == "mp3";
-  }).toList();
-
-  return mp3Songs;
+Future<List<AudioModel>> getSongs() async {
+  List<AudioModel> audios = [];
+  for (int key in audioBox.keys) {
+    AudioModel? audioModel = await audioBox.get(key);
+    if (audioModel != null) {
+      audios.add(audioModel);
+    }
+  }
+  return audios;
 }
+
+Future<List<AudioModel>> mostlyAudios() async {
+  List<AudioModel> audios = [];
+  for (int key in audioBox.keys) {
+    AudioModel? audioModel = await audioBox.get(key);
+    if (audioModel != null) {
+      if (audioModel.playCount >= 1) {
+        audios.add(audioModel);
+        
+      }
+    }
+  }
+  audios.sort((a, b) => b.playCount.compareTo(a.playCount));
+  return audios;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Future<List<SongModel>> fetchMP3SongsWithoutHive() async {
+//   var allSongs = await _audioQuery.querySongs(
+//     sortType: SongSortType.DATE_ADDED,
+//   );
+//   var mp3Songs = allSongs.where((song) {
+//     return song.fileExtension == "mp3";
+//   }).toList();
+
+//   return mp3Songs;
+// }

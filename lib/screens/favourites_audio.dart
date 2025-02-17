@@ -5,17 +5,21 @@ import 'package:mediox/services/provider/recently_favourite.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
-class RecentlyAudios extends StatelessWidget {
-  const RecentlyAudios({super.key});
+class FavouritesAudio extends StatelessWidget {
+  const FavouritesAudio({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RecentlyFavouriteProvider>(
-        builder: (context, recentlyPlayedProvider, _) {
-      if (recentlyPlayedProvider.recentlySongs.isEmpty) {
-        return const Center(child: Text('No recents found.'));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Favourites"),
+      ),
+      body: Consumer<RecentlyFavouriteProvider>(
+        builder: (context, favouritesProvider, _) {
+      if (favouritesProvider.favouriteAudios.isEmpty) {
+        return const Center(child: Text('No favourites'));
       }
-      List<AudioModel> songs = recentlyPlayedProvider.recentlySongs;
+      List<AudioModel> songs = favouritesProvider.favouriteAudios;
       return ListView.builder(
         itemCount: songs.length,
         itemBuilder: (context, index) {
@@ -69,6 +73,7 @@ class RecentlyAudios extends StatelessWidget {
           );
         },
       );
-    });
+    }),
+    );
   }
 }

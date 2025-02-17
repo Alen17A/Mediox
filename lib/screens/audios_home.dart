@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mediox/widgets/all_audios.dart';
+import 'package:mediox/widgets/all_playlists.dart';
 import 'package:mediox/widgets/floating_bottom_navbar.dart';
+import 'package:mediox/widgets/mostly_played.dart';
 import 'package:mediox/widgets/recently_audios.dart';
 
 class AudioHome extends StatelessWidget {
@@ -20,6 +22,7 @@ class AudioHome extends StatelessWidget {
                   hintText: "Search Audios....",
                   shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
+                  shadowColor: const WidgetStatePropertyAll(Color(0xff2E6F40)),
                 ),
               ),
             ],
@@ -87,8 +90,8 @@ class AudioHome extends StatelessWidget {
             TabBarView(children: [
               AllAudios(),
               RecentlyAudios(),
-              Icon(Icons.music_note),
-              Icon(Icons.music_note)
+              MostlyPlayed(),
+              AllPlaylists(),
             ]),
             FloatingBottomNavBar(),
           ],

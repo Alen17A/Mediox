@@ -1,10 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:hive_flutter/hive_flutter.dart';
 part 'audio_model.g.dart';
 
 @HiveType(typeId: 1)
-class AudioModel {
+class AudioModel extends HiveObject{
   @HiveField(0)
   final String audioPath;
 
@@ -21,7 +19,7 @@ class AudioModel {
   final int audioId;
 
   @HiveField(5)
-  final Uint8List? audioImage;
+  int playCount;
 
   AudioModel({
     required this.audioPath,
@@ -29,6 +27,6 @@ class AudioModel {
     required this.artist,
     required this.totalDuration,
     required this.audioId,
-    this.audioImage,
+    this.playCount = 0
   });
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mediox/data/functions/playlists_audios.dart';
 import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/services/provider/recently_played.dart';
+import 'package:mediox/services/provider/mostly_played_provider.dart';
+import 'package:mediox/services/provider/recently_favourite.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -20,10 +21,9 @@ class _AudioPlaybackState extends State<AudioPlayback> {
   late AudioPlayer audioPlayer;
   late int currentIndex;
   bool isPlaying = true;
-
   Duration totalDuration = Duration.zero;
-
   Duration durationPosition = Duration.zero;
+  LoopMode currentLoopMode = LoopMode.off;
 
   @override
   void initState() {
@@ -34,14 +34,20 @@ class _AudioPlaybackState extends State<AudioPlayback> {
   Future<void> initAudioPlayback() async {
     audioPlayer = AudioPlayer();
     currentIndex = widget.index;
-    setAudioSource(widget.audioFile[widget.index].audioPath);
+    setAudioSource(widget.audioFile[currentIndex].audioPath);
     audioPlayer.play();
     await addSongToPlaylist(
         playlistAudios: [widget.audioFile[currentIndex]],
         playlistName: "Recently Played",
         playlistId: "recentlyPlayed");
-    await Provider.of<RecentlyPlayedProvider>(context, listen: false)
+    await Provider.of<RecentlyFavouriteProvider>(context, listen: false)
         .getRecentlySongsProvider();
+    setState(() {
+      widget.audioFile[currentIndex].playCount++;
+    });
+    await widget.audioFile[currentIndex].save();
+    await Provider.of<MostlyPlayedProvider>(context, listen: false)
+        .getMostlyPlayedProvider();
   }
 
   Future<void> setAudioSource(String song) async {
@@ -50,9 +56,17 @@ class _AudioPlaybackState extends State<AudioPlayback> {
     try {
       await audioPlayer.setAudioSource(source);
       totalDuration = (await audioPlayer.load())!;
+      // audioPlayer.processingStateStream.listen((state) async {
+      //   if (state == ProcessingState.completed) {
+      //     await skipNext();
+      //   }
+      // });
       audioPlayer.positionStream.listen((position) {
         setState(() {
           durationPosition = position;
+          if (durationPosition == totalDuration) {
+            skipNext();
+          }
         });
       });
     } catch (e) {
@@ -73,13 +87,13 @@ class _AudioPlaybackState extends State<AudioPlayback> {
     });
   }
 
-  void skipNext() async {
+  Future<void> skipNext() async {
     if (currentIndex < widget.audioFile.length - 1) {
       setState(() {
         currentIndex++;
       });
       setAudioSource(widget.audioFile[currentIndex].audioPath);
-      audioPlayer.play();
+      await audioPlayer.play();
       setState(() {
         isPlaying = true;
       });
@@ -87,8 +101,12 @@ class _AudioPlaybackState extends State<AudioPlayback> {
           playlistAudios: [widget.audioFile[currentIndex]],
           playlistName: "Recently Played",
           playlistId: "recentlyPlayed");
-      await Provider.of<RecentlyPlayedProvider>(context, listen: false)
+      await Provider.of<RecentlyFavouriteProvider>(context, listen: false)
           .getRecentlySongsProvider();
+      setState(() {
+        widget.audioFile[currentIndex].playCount++;
+      });
+      await widget.audioFile[currentIndex].save();
     }
   }
 
@@ -106,10 +124,29 @@ class _AudioPlaybackState extends State<AudioPlayback> {
           playlistAudios: [widget.audioFile[currentIndex]],
           playlistName: "Recently Played",
           playlistId: "recentlyPlayed");
-      await Provider.of<RecentlyPlayedProvider>(context, listen: false)
+      await Provider.of<RecentlyFavouriteProvider>(context, listen: false)
           .getRecentlySongsProvider();
+      setState(() {
+        widget.audioFile[currentIndex].playCount++;
+      });
+      await widget.audioFile[currentIndex].save();
     }
   }
+
+  void repeatAudio() {
+    if (currentLoopMode == LoopMode.off) {
+      currentLoopMode == LoopMode.one;
+    } else if (currentLoopMode == LoopMode.one) {
+      currentLoopMode == LoopMode.all;
+    } else if (currentLoopMode == LoopMode.all) {
+      currentLoopMode = LoopMode.off;
+    }
+
+    audioPlayer.setLoopMode(currentLoopMode);
+    setState(() {});
+  }
+
+  void shuffleAudios() {}
 
   String formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -121,7 +158,7 @@ class _AudioPlaybackState extends State<AudioPlayback> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 154, 192, 165),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -136,15 +173,17 @@ class _AudioPlaybackState extends State<AudioPlayback> {
               QueryArtworkWidget(
                 id: widget.audioFile[currentIndex].audioId,
                 type: ArtworkType.AUDIO,
-                size: 600,
+                artworkHeight: 200,
+                artworkWidth: 200,
+                artworkBorder: BorderRadius.circular(100),
               ),
               const SizedBox(height: 20),
               Text(
                 widget.audioFile[currentIndex].title,
                 style:
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                // overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 60),
@@ -160,7 +199,12 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                   ),
                   const SizedBox(width: 180),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await addSongToPlaylist(
+                          playlistAudios: [widget.audioFile[currentIndex]],
+                          playlistName: "Favourites",
+                          playlistId: "favourite");
+                    },
                     icon: const Icon(
                       Icons.favorite_outline,
                       size: 30,
@@ -197,9 +241,15 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.repeat,
+                    onPressed: () {
+                      repeatAudio();
+                    },
+                    icon: Icon(
+                      currentLoopMode == LoopMode.off
+                          ? Icons.repeat
+                          : currentLoopMode == LoopMode.one
+                              ? Icons.repeat_one
+                              : Icons.list,
                       size: 30,
                     ),
                   ),
@@ -209,7 +259,7 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                     },
                     icon: const Icon(
                       Icons.skip_previous,
-                      size: 30,
+                      size: 40,
                     ),
                   ),
                   IconButton(
@@ -218,7 +268,7 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                     },
                     icon: Icon(
                       isPlaying ? Icons.pause : Icons.play_arrow_rounded,
-                      size: 80,
+                      size: 100,
                       color: const Color.fromARGB(255, 49, 80, 58),
                     ),
                   ),
@@ -228,7 +278,7 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                     },
                     icon: const Icon(
                       Icons.skip_next,
-                      size: 30,
+                      size: 40,
                     ),
                   ),
                   IconButton(

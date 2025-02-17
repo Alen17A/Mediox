@@ -5,7 +5,8 @@ import 'package:mediox/data/functions/store_fetch_audios.dart';
 import 'package:mediox/data/models/audio_model.dart';
 import 'package:mediox/data/models/audios_playlist_model.dart';
 import 'package:mediox/screens/splash_screen.dart';
-import 'package:mediox/services/provider/recently_played.dart';
+import 'package:mediox/services/provider/mostly_played_provider.dart';
+import 'package:mediox/services/provider/recently_favourite.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -30,8 +31,11 @@ class Mediox extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => RecentlyPlayedProvider(),
-        )
+          create: (context) => RecentlyFavouriteProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MostlyPlayedProvider(),
+        ),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

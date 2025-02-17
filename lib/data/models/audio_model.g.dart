@@ -22,13 +22,14 @@ class AudioModelAdapter extends TypeAdapter<AudioModel> {
       artist: fields[2] as String,
       totalDuration: fields[3] as int,
       audioId: fields[4] as int,
+      playCount: fields[5] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, AudioModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.audioPath)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class AudioModelAdapter extends TypeAdapter<AudioModel> {
       ..writeByte(3)
       ..write(obj.totalDuration)
       ..writeByte(4)
-      ..write(obj.audioId);
+      ..write(obj.audioId)
+      ..writeByte(5)
+      ..write(obj.playCount);
   }
 
   @override

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mediox/data/functions/store_fetch_audios.dart';
 import 'package:mediox/screens/audios_home.dart';
-import 'package:mediox/services/provider/recently_played.dart';
+import 'package:mediox/services/provider/mostly_played_provider.dart';
+import 'package:mediox/services/provider/recently_favourite.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -29,8 +30,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> splash(BuildContext ctx) async {
     await fetchMP3SongsWithHive();
-    Provider.of<RecentlyPlayedProvider>(context, listen: false)
+    Provider.of<RecentlyFavouriteProvider>(context, listen: false)
         .getRecentlySongsProvider();
+    Provider.of<RecentlyFavouriteProvider>(context, listen: false)
+        .getFavouritesProvider();
+    Provider.of<MostlyPlayedProvider>(context, listen: false)
+        .getMostlyPlayedProvider();
     Navigator.pushReplacement(
         ctx, MaterialPageRoute(builder: (context) => const AudioHome()));
   }

@@ -4,6 +4,7 @@ part 'audios_playlist_model.g.dart';
 
 @HiveType(typeId: 2)
 class AudioPlaylistModel {
+  
   @HiveField(0)
   final String playlistId;
 

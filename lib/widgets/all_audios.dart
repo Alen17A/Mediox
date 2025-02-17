@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mediox/data/functions/playlists_audios.dart';
 import 'package:mediox/data/functions/store_fetch_audios.dart';
 import 'package:mediox/data/models/audio_model.dart';
 import 'package:mediox/screens/audio_playback.dart';
+import 'package:mediox/services/provider/recently_favourite.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 
 class AllAudios extends StatelessWidget {
   const AllAudios({super.key});
@@ -67,7 +70,74 @@ class AllAudios extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const Icon(Icons.more_vert),
+                            PopupMenuButton(
+                                itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        child: TextButton.icon(
+                                          onPressed: () async {
+                                            await addSongToPlaylist(
+                                                    playlistAudios: [
+                                                  songs[index]
+                                                ],
+                                                    playlistName: "Favourites",
+                                                    playlistId: "favourite")
+                                                .then((_) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(content: Text("Added to favourites"), backgroundColor: Colors.green,));
+                                            });
+                                            await Provider.of<
+                                                        RecentlyFavouriteProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .getFavouritesProvider();
+                                          },
+                                          label: const Text(
+                                            "Add to favourites",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          icon: const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                      const PopupMenuItem(
+                                        child: DropdownMenu(
+                                          dropdownMenuEntries: [
+                                            DropdownMenuEntry(
+                                                value: 1, label: "Playlist 1"),
+                                            DropdownMenuEntry(
+                                                value: 2, label: "Playlist 1"),
+                                            DropdownMenuEntry(
+                                                value: 3, label: "Playlist 1")
+                                          ],
+                                          label: Text(
+                                            "Add to playlists",
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                          leadingIcon: Icon(
+                                            Icons.playlist_add,
+                                            color: Colors.green,
+                                          ),
+                                          width: double.infinity,
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        child: TextButton.icon(
+                                          onPressed: () {},
+                                          label: const Text(
+                                            "Delete",
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
                           ],
                         ),
                       )),
