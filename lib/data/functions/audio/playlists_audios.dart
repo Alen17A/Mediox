@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/data/models/audios_playlist_model.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/data/models/audio/audios_playlist_model.dart';
 
 late LazyBox<AudioPlaylistModel> playlistModelAudioBox;
 
@@ -9,7 +9,8 @@ Future<void> addSongToPlaylist(
     {String? playlistId,
     required List<AudioModel> playlistAudios,
     required String playlistName}) async {
-  if (playlistId == null) {    //For custom playlists when creating for first time
+  if (playlistId == null) {
+    //For custom playlists when creating for first time
     playlistId ??= DateTime.now().microsecondsSinceEpoch.toString();
     AudioPlaylistModel playlistModel = AudioPlaylistModel(
         playlistId: playlistId,
@@ -18,16 +19,20 @@ Future<void> addSongToPlaylist(
 
     await playlistModelAudioBox.put(playlistId, playlistModel);
   } else {
-    AudioPlaylistModel? audioPlaylistModel = 
-        await playlistModelAudioBox.get(playlistId);  //If a playlist already exists, get its id.
+    AudioPlaylistModel? audioPlaylistModel = await playlistModelAudioBox
+        .get(playlistId); //If a playlist already exists, get its id.
 
-    if (audioPlaylistModel != null) {  //If the audioPlaylistModel already contains some audios,
-      for (AudioModel playlistAudio in playlistAudios) {  //playlistAudios = Audios of the playlist that is get.
-        audioPlaylistModel.playlistAudios.removeWhere(  //remove audio from audioPlaylistModel if playlistAudios contains the same audio.
+    if (audioPlaylistModel != null) {
+      //If the audioPlaylistModel already contains some audios,
+      for (AudioModel playlistAudio in playlistAudios) {
+        //playlistAudios = Audios of the playlist that is get.
+        audioPlaylistModel.playlistAudios.removeWhere(
+            //remove audio from audioPlaylistModel if playlistAudios contains the same audio.
             (playlistSong) => playlistSong.audioId == playlistAudio.audioId);
       }
 
-      AudioPlaylistModel playlistModel = AudioPlaylistModel( //Add audios of audioPlaylistModel and that playlist which is get.
+      AudioPlaylistModel playlistModel = AudioPlaylistModel(
+          //Add audios of audioPlaylistModel and that playlist which is get.
           playlistId: playlistId,
           playlistName: playlistName,
           playlistAudios: [
@@ -37,7 +42,8 @@ Future<void> addSongToPlaylist(
 
       await playlistModelAudioBox.put(playlistId, playlistModel);
     } else {
-      AudioPlaylistModel playlistModel = AudioPlaylistModel( //If audioPlaylistModel is empty.
+      AudioPlaylistModel playlistModel = AudioPlaylistModel(
+          //If audioPlaylistModel is empty.
           playlistId: playlistId,
           playlistName: playlistName,
           playlistAudios: playlistAudios);
@@ -48,7 +54,8 @@ Future<void> addSongToPlaylist(
 }
 
 // Get recently played audios
-Future<List<AudioModel>> getRecentlySongs() async { //Get the audios to a list.
+Future<List<AudioModel>> getRecentlySongs() async {
+  //Get the audios to a list.
   List<AudioModel> recentlyAudios = [];
   final AudioPlaylistModel? recentlyPlayed =
       await playlistModelAudioBox.get("recentlyPlayed");
@@ -56,7 +63,7 @@ Future<List<AudioModel>> getRecentlySongs() async { //Get the audios to a list.
     recentlyAudios.addAll(recentlyPlayed.playlistAudios);
   }
 
-  return recentlyAudios.take(10).toList();
+  return recentlyAudios;
 }
 
 // Get favourite audios
@@ -70,4 +77,20 @@ Future<List<AudioModel>> getFavouriteAudios() async {
   }
 
   return favouriteAudios;
+}
+
+// Get custom playlists
+Future<List<AudioPlaylistModel>> getPlaylists() async {
+  //Get playlists to a list.
+  List<AudioPlaylistModel> playlists = [];
+  for (String key in playlistModelAudioBox.keys) {
+    AudioPlaylistModel? audioPlaylist = await playlistModelAudioBox.get(key);
+    if (audioPlaylist != null) {
+      playlists.add(audioPlaylist);
+    }
+  }
+
+  playlists.removeWhere(
+      (AudioPlaylistModel playlist) => playlist.playlistId == "recentlyPlayed" || playlist.playlistId == "favourite");
+  return playlists;
 }

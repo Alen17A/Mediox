@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mediox/data/functions/playlists_audios.dart';
-import 'package:mediox/data/functions/store_fetch_audios.dart';
-import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/data/models/audios_playlist_model.dart';
-import 'package:mediox/screens/splash_screen.dart';
-import 'package:mediox/services/provider/mostly_played_provider.dart';
-import 'package:mediox/services/provider/recently_favourite.dart';
+import 'package:mediox/data/functions/audio/playlists_audios.dart';
+import 'package:mediox/data/functions/audio/store_fetch_audios.dart';
+import 'package:mediox/data/functions/video/store_fetch_videos.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/data/models/audio/audios_playlist_model.dart';
+import 'package:mediox/data/models/video/video_model.dart';
+import 'package:mediox/presentation/splash_screen/splash_screen.dart';
+import 'package:mediox/services/provider/audio/custom_playlist_provider.dart';
+import 'package:mediox/services/provider/audio/get_audios_provider.dart';
+import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
+import 'package:mediox/services/provider/audio/recently_favourite.dart';
+import 'package:mediox/services/provider/video/get_videos_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(AudioModelAdapter().typeId) ||
-      !Hive.isAdapterRegistered(AudioPlaylistModelAdapter().typeId)) {
+      !Hive.isAdapterRegistered(AudioPlaylistModelAdapter().typeId) ||
+      !Hive.isAdapterRegistered(VideoModelAdapter().typeId)) {
     Hive.registerAdapter(AudioModelAdapter());
     Hive.registerAdapter(AudioPlaylistModelAdapter());
+    Hive.registerAdapter(VideoModelAdapter());
   }
   audioBox = await Hive.openLazyBox<AudioModel>('audioBox');
   playlistModelAudioBox =
       await Hive.openLazyBox<AudioPlaylistModel>('playlistAudioBox');
+  videoBox = await Hive.openLazyBox<VideoModel>("videoBox");
   runApp(const Mediox());
 }
 
@@ -31,10 +39,19 @@ class Mediox extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (context) => GetAudiosProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => RecentlyFavouriteProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => MostlyPlayedProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CustomPlaylistProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GetVideosProvider(),
         ),
       ],
       child: const MaterialApp(

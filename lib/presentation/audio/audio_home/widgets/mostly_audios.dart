@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/screens/audio_playback.dart';
-import 'package:mediox/services/provider/mostly_played_provider.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/presentation/audio/audio_playback/audio_playback.dart';
+import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +22,14 @@ class MostlyPlayed extends StatelessWidget {
           // var song = songs[index];
           return GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => AudioPlayback(
-              //               audioFile: songs,
-              //               index: index,
-              //             )));
-              print(songs[index].playCount);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AudioPlayback(
+                            audioFile: songs,
+                            index: index,
+                          )));
+              // print(songs[index].playCount);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

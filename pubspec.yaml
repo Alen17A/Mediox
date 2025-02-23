@@ -38,11 +38,14 @@ dependencies:
   hive_flutter: ^1.1.0
   on_audio_query: ^2.8.1
   just_audio: ^0.9.43
-  media_kit: ^1.1.11
   provider: ^6.1.2
   hive: ^2.2.3
   fvm: ^3.2.1
   google_fonts: ^6.2.1
+  video_player: ^2.9.3
+  video_storage_query: ^1.0.0
+  photo_manager: ^3.6.4
+  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_test:

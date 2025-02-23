@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:mediox/data/functions/playlists_audios.dart';
-import 'package:mediox/data/models/audio_model.dart';
+import 'package:mediox/data/functions/audio/playlists_audios.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
 
 class RecentlyFavouriteProvider extends ChangeNotifier {
   List<AudioModel> recentlySongs = [];

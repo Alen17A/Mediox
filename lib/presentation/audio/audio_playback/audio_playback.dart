@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:mediox/data/functions/playlists_audios.dart';
-import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/services/provider/mostly_played_provider.dart';
-import 'package:mediox/services/provider/recently_favourite.dart';
+import 'package:mediox/data/functions/audio/playlists_audios.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
+import 'package:mediox/services/provider/audio/recently_favourite.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -110,7 +110,7 @@ class _AudioPlaybackState extends State<AudioPlayback> {
     }
   }
 
-  void skipPrevious() async {
+  Future<void> skipPrevious() async {
     if (currentIndex > 0) {
       setState(() {
         currentIndex--;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/data/models/audio_model.dart';
-import 'package:mediox/screens/audio_playback.dart';
-import 'package:mediox/services/provider/recently_favourite.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/presentation/audio/audio_playback/audio_playback.dart';
+import 'package:mediox/services/provider/audio/recently_favourite.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class RecentlyAudios extends StatelessWidget {
       }
       List<AudioModel> songs = recentlyPlayedProvider.recentlySongs;
       return ListView.builder(
-        itemCount: songs.length,
+        itemCount: songs.length > 10 ? 10 : songs.length,
         itemBuilder: (context, index) {
           // var song = songs[index];
           return GestureDetector(

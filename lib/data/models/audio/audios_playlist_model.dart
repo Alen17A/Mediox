@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mediox/data/models/audio_model.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
 part 'audios_playlist_model.g.dart';
 
 @HiveType(typeId: 2)

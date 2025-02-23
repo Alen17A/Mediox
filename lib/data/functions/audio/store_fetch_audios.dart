@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mediox/data/models/audio_model.dart';
+import 'package:mediox/data/models/audio/audio_model.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 late LazyBox<AudioModel> audioBox;
@@ -53,9 +53,8 @@ Future<List<AudioModel>> mostlyAudios() async {
   for (int key in audioBox.keys) {
     AudioModel? audioModel = await audioBox.get(key);
     if (audioModel != null) {
-      if (audioModel.playCount >= 1) {
+      if (audioModel.playCount > 0) {
         audios.add(audioModel);
-        
       }
     }
   }

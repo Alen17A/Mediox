@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/screens/audios_home.dart';
+import 'package:mediox/presentation/audio/audio_home/audios_home.dart';
+import 'package:mediox/presentation/video/video_home/videos_home.dart';
 
 class FloatingBottomNavBar extends StatefulWidget {
   const FloatingBottomNavBar({super.key});
@@ -59,7 +60,12 @@ class _FloatingBottomNavBarState extends State<FloatingBottomNavBar> {
                     // border: Border.all(color: Colors.white, width: 1),
                     borderRadius: BorderRadius.circular(10)),
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const VideoHome()));
+                  },
                   label: const Text(
                     "Videos",
                     style: TextStyle(color: Colors.black),

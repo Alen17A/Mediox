@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/widgets/all_audios.dart';
-import 'package:mediox/widgets/all_playlists.dart';
+import 'package:mediox/presentation/video/video_home/widgets/all_videos.dart';
 import 'package:mediox/widgets/floating_bottom_navbar.dart';
-import 'package:mediox/widgets/mostly_played.dart';
-import 'package:mediox/widgets/recently_audios.dart';
 
-class AudioHome extends StatelessWidget {
-  const AudioHome({super.key});
+class VideoHome extends StatelessWidget {
+  const VideoHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +11,18 @@ class AudioHome extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 5,
+          shadowColor: Colors.black,
+          surfaceTintColor: Colors.blue,
           title: Row(
             children: [
               Expanded(
                 child: SearchBar(
                   leading: const Icon(Icons.search),
-                  hintText: "Search Audios....",
+                  hintText: "Search Videos....",
                   shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10))),
-                  shadowColor: const WidgetStatePropertyAll(Color(0xff2E6F40)),
+                  shadowColor: WidgetStatePropertyAll(Colors.blue[300]),
                 ),
               ),
             ],
@@ -31,22 +31,22 @@ class AudioHome extends StatelessWidget {
           bottom: const TabBar(
               padding: EdgeInsets.symmetric(horizontal: 10),
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorColor: Color(0xff2E6F40),
+              indicatorColor: Color.fromARGB(255, 15, 105, 178),
               dividerColor: Colors.transparent,
-              labelColor: Color(0xff2E6F40),
+              labelColor: Color.fromARGB(255, 15, 105, 178),
               labelStyle: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
               unselectedLabelStyle: TextStyle(),
               tabs: [
                 Tab(
-                  text: "All Songs",
+                  text: "All Videos",
                 ),
                 Tab(
-                  text: "Recently Played",
+                  text: "Recently Watched",
                 ),
                 Tab(
-                  text: "Mostly Played",
+                  text: "Mostly Watched",
                 ),
                 Tab(
                   text: "Playlists",
@@ -59,7 +59,7 @@ class AudioHome extends StatelessWidget {
               DrawerHeader(
                   child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const AudioHome())),
+                    MaterialPageRoute(builder: (context) => const VideoHome())),
                 child: Image.asset("assets/images/MEDIOX_2.png"),
               )),
               ListTile(
@@ -88,10 +88,10 @@ class AudioHome extends StatelessWidget {
         body: const Stack(
           children: [
             TabBarView(children: [
-              AllAudios(),
-              RecentlyAudios(),
-              MostlyPlayed(),
-              AllPlaylists(),
+              AllVideos(),
+              Icon(Icons.video_camera_back),
+              Icon(Icons.video_camera_back),
+              Icon(Icons.video_camera_back),
             ]),
             FloatingBottomNavBar(),
           ],
