@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mediox/data/models/video/video_model.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -11,7 +10,7 @@ late LazyBox<VideoModel> videoBox;
 Future<void> fetchVideosWithHive() async {
   final PermissionState videoPermission =
       await PhotoManager.requestPermissionExtend();
-  print("Permission status: $videoPermission");
+  debugPrint("Permission status: $videoPermission");
   if (!videoPermission.isAuth) {
     PhotoManager.openSetting();
   }
@@ -51,4 +50,19 @@ Future<List<VideoModel>> getVideos() async {
   }
 
   return videosList;
+}
+
+
+Future<List<VideoModel>> mostlyVideos() async {
+  List<VideoModel> videos = [];
+  for (String key in videoBox.keys) {
+    VideoModel? videoModel = await videoBox.get(key);
+    if (videoModel != null) {
+      if (videoModel.playCount > 0) {
+        videos.add(videoModel);
+      }
+    }
+  }
+  videos.sort((a, b) => b.playCount.compareTo(a.playCount));
+  return videos;
 }

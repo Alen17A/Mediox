@@ -8,13 +8,13 @@ late LazyBox<AudioPlaylistModel> playlistModelAudioBox;
 Future<void> addSongToPlaylist(
     {String? playlistId,
     required List<AudioModel> playlistAudios,
-    required String playlistName}) async {
+    String? playlistName}) async {
   if (playlistId == null) {
     //For custom playlists when creating for first time
     playlistId ??= DateTime.now().microsecondsSinceEpoch.toString();
     AudioPlaylistModel playlistModel = AudioPlaylistModel(
         playlistId: playlistId,
-        playlistName: playlistName,
+        playlistName: playlistName!,
         playlistAudios: playlistAudios);
 
     await playlistModelAudioBox.put(playlistId, playlistModel);
@@ -31,21 +31,17 @@ Future<void> addSongToPlaylist(
             (playlistSong) => playlistSong.audioId == playlistAudio.audioId);
       }
 
-      AudioPlaylistModel playlistModel = AudioPlaylistModel(
-          //Add audios of audioPlaylistModel and that playlist which is get.
-          playlistId: playlistId,
-          playlistName: playlistName,
-          playlistAudios: [
-            ...playlistAudios,
-            ...audioPlaylistModel.playlistAudios
-          ]);
+      List<AudioModel> temp = List.from(audioPlaylistModel.playlistAudios);
+      audioPlaylistModel.playlistAudios.clear();
 
-      await playlistModelAudioBox.put(playlistId, playlistModel);
+      audioPlaylistModel.playlistAudios.addAll(temp + playlistAudios);
+
+      await playlistModelAudioBox.put(playlistId, audioPlaylistModel);
     } else {
       AudioPlaylistModel playlistModel = AudioPlaylistModel(
           //If audioPlaylistModel is empty.
           playlistId: playlistId,
-          playlistName: playlistName,
+          playlistName: playlistName!,
           playlistAudios: playlistAudios);
 
       await playlistModelAudioBox.put(playlistId, playlistModel);
@@ -79,6 +75,19 @@ Future<List<AudioModel>> getFavouriteAudios() async {
   return favouriteAudios;
 }
 
+// Get audios of each playlists
+Future<List<AudioModel>> getCustomAudios(String playlistId) async {
+  //Get the audios to a list.
+  List<AudioModel> customAudios = [];
+  final AudioPlaylistModel? customAudio =
+      await playlistModelAudioBox.get(playlistId);
+  if (customAudio != null) {
+    customAudios.addAll(customAudio.playlistAudios);
+  }
+
+  return customAudios;
+}
+
 // Get custom playlists
 Future<List<AudioPlaylistModel>> getPlaylists() async {
   //Get playlists to a list.
@@ -90,7 +99,52 @@ Future<List<AudioPlaylistModel>> getPlaylists() async {
     }
   }
 
-  playlists.removeWhere(
-      (AudioPlaylistModel playlist) => playlist.playlistId == "recentlyPlayed" || playlist.playlistId == "favourite");
+  playlists.removeWhere((AudioPlaylistModel playlist) =>
+      playlist.playlistId == "recentlyPlayed" ||
+      playlist.playlistId == "favourite");
   return playlists;
 }
+
+Future<void> removeFromPlaylists(
+    {required int audioId, required String? playlistId}) async {
+  // get existing playListmodel
+
+  if (playlistId != null) {
+    final AudioPlaylistModel? existsPlayListModel =
+        await playlistModelAudioBox.get(playlistId);
+
+    //Remove existing audiomodel from favorites
+    existsPlayListModel!.playlistAudios
+        .removeWhere((existAudioModel) => existAudioModel.audioId == audioId);
+
+    // update the favoties playlist model
+    // final AudioPlaylistModel playlistModel = AudioPlaylistModel(
+    //   playlistId: playlistId,
+    //   playListName: "Favorites",
+    //   audioModelList: existsfavoritesListModel.audioModelList,
+    // );
+
+    // save to database
+    await playlistModelAudioBox.put(playlistId, existsPlayListModel);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+// AudioPlaylistModel playlistModel = AudioPlaylistModel(
+      //     //Add audios of audioPlaylistModel and that playlist which is get.
+      //     playlistId: playlistId,
+      //     playlistAudios: [
+      //       ...playlistAudios,
+      //       ...audioPlaylistModel.playlistAudios
+      //     ]);
+
+// Future<void> deleteAudios(
+//     {required int audioId, required String? playlistId}) async {}

@@ -1,0 +1,2 @@
+J:/VSC Codes/BROTOTYPE/Flutter/mediox/android/app/.cxx/Debug/3g56561h/x86/CMakeFiles/edit_cache.dir
+J:/VSC Codes/BROTOTYPE/Flutter/mediox/android/app/.cxx/Debug/3g56561h/x86/CMakeFiles/rebuild_cache.dir

@@ -20,8 +20,8 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       videoId: fields[0] as String,
       videoTitle: fields[1] as String,
       videoPath: fields[2] as String,
-      thumbnail: fields[4] as Uint8List?,
-      playcount: fields[3] as int,
+      thumbnail: fields[3] as Uint8List?,
+      playCount: fields[4] as int,
     );
   }
 
@@ -36,9 +36,9 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       ..writeByte(2)
       ..write(obj.videoPath)
       ..writeByte(3)
-      ..write(obj.playcount)
+      ..write(obj.thumbnail)
       ..writeByte(4)
-      ..write(obj.thumbnail);
+      ..write(obj.playCount);
   }
 
   @override

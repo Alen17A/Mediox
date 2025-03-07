@@ -15,15 +15,15 @@ class VideoModel extends HiveObject {
   final String videoPath;
 
   @HiveField(3)
-  int playcount;
+  final Uint8List? thumbnail;
 
   @HiveField(4)
-  final Uint8List? thumbnail;
+  int playCount;
 
   VideoModel(
       {required this.videoId,
       required this.videoTitle,
       required this.videoPath,
       required this.thumbnail,
-      this.playcount = 0});
+      this.playCount = 0});
 }
