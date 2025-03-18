@@ -9,7 +9,7 @@ class AudioPlaylistModel {
   final String playlistId;
 
   @HiveField(1)
-  final String playlistName;
+  String playlistName;
 
   @HiveField(2)
   final List<AudioModel> playlistAudios;

@@ -28,16 +28,36 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    String gifMode = isDark
+        ? "assets/gifs/MEDIOX_dark_bg_removed.gif"
+        : "assets/gifs/MEDIOX_light_bg_removed.gif";
     return Scaffold(
-      body: Center(
-        child: Image.asset("assets/images/MEDIOX_2.png"),
+      body: Stack(
+        children: [
+          Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.green, Colors.white],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+          Center(
+          child: Image.asset(
+            gifMode,
+            width: 900,
+            height: 900,
+          ),
+        ),]
       ),
     );
   }
 
   Future<void> splash(BuildContext ctx) async {
-    await fetchVideosWithHive();
     await fetchMP3SongsWithHive();
+    await fetchVideosWithHive();
     Provider.of<GetAudiosProvider>(context, listen: false).getAllAudios();
     Provider.of<RecentlyFavouriteAudiosProvider>(context, listen: false)
         .getRecentlySongsProvider();

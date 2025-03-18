@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/presentation/pages/audio/audio_home/widgets/all_audios/all_audios.dart';
-import 'package:mediox/presentation/pages/audio/audio_home/widgets/all_playlists/all_playlists_audios.dart';
+import 'package:mediox/data/functions/audio/store_fetch_audios.dart';
+import 'package:mediox/presentation/pages/audio/all_audios/all_audios.dart';
+import 'package:mediox/presentation/pages/audio/all_playlists/all_playlists_audios.dart';
 import 'package:mediox/presentation/pages/audio/audio_home/widgets/audios_search.dart';
+import 'package:mediox/presentation/pages/audio/audio_playback/widgets/miniplayer_audio.dart';
 import 'package:mediox/presentation/widgets/floating_bottom_navbar.dart';
-import 'package:mediox/presentation/pages/audio/audio_home/widgets/mostly_audios/mostly_audios.dart';
-import 'package:mediox/presentation/pages/audio/audio_home/widgets/recently_audios/recently_audios.dart';
+import 'package:mediox/presentation/pages/audio/mostly_audios/mostly_audios.dart';
+import 'package:mediox/presentation/pages/audio/recently_audios/recently_audios.dart';
+import 'package:mediox/services/provider/audio/get_audios_provider.dart';
+import 'package:mediox/services/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class AudioHome extends StatelessWidget {
   const AudioHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -20,9 +27,7 @@ class AudioHome extends StatelessWidget {
           surfaceTintColor: const Color(0xff2E6F40),
           title: const Row(
             children: [
-              Expanded(
-                child: AudiosSearch()
-              ),
+              Expanded(child: AudiosSearch()),
             ],
           ),
           toolbarHeight: 80,
@@ -58,17 +63,26 @@ class AudioHome extends StatelessWidget {
                   child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const AudioHome())),
-                child: Image.asset("assets/images/MEDIOX_2.png"),
+                child: Image.asset("assets/gifs/MEDIOX_light_bg_removed.gif"),
               )),
               ListTile(
-                title: const Text("Settings"),
-                trailing: const Icon(Icons.settings),
-                onTap: () {},
+                title: const Text("Dark Mode"),
+                trailing: Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (bool newValue) {
+                    themeProvider.toggleTheme(newValue);
+                  },
+                  activeColor: Colors.green,
+                ),
               ),
               ListTile(
-                title: const Text("Help"),
-                trailing: const Icon(Icons.help),
-                onTap: () {},
+                title: const Text("Sync Audios"),
+                trailing: const Icon(Icons.sync),
+                onTap: () async {
+                  await fetchMP3SongsWithHive();
+                  Provider.of<GetAudiosProvider>(context, listen: false)
+                      .getAllAudios();
+                },
               ),
               ListTile(
                 title: const Text("Contact Us"),
@@ -83,15 +97,25 @@ class AudioHome extends StatelessWidget {
             ],
           ),
         ),
-        body: const Stack(
+        body: Stack(
           children: [
-            TabBarView(children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green, Colors.white],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            const TabBarView(children: [
               AllAudios(),
               RecentlyAudios(),
               MostlyPlayed(),
               AllPlaylists(),
             ]),
-            FloatingBottomNavBar(),
+            const FloatingBottomNavBar(),
+            const MiniplayerAudio(),
           ],
         ),
       ),

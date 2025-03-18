@@ -43,10 +43,10 @@ dependencies:
   fvm: ^3.2.1
   google_fonts: ^6.2.1
   video_player: ^2.9.3
-  video_storage_query: ^1.0.0
   photo_manager: ^3.6.4
   video_thumbnail: ^0.5.3
   palette_generator: ^0.3.3+6
+  shared_preferences: ^2.5.2
 
 dev_dependencies:
   flutter_test:
@@ -74,9 +74,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/MEDIOX.gif
-    - assets/images/MEDIOX.png
-    - assets/images/MEDIOX_2.png
+    - assets/gifs/MEDIOX_dark_bg_removed.gif
+    - assets/gifs/MEDIOX_light_bg_removed.gif
+    - assets/images/MEDIOX_dark_bg_removed.png
+    - assets/images/MEDIOX_light_bg_removed.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

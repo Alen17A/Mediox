@@ -111,7 +111,8 @@ class MoreOptionsVideo extends StatelessWidget {
                                 playlistName: playlistName,
                                 playlistId: playlistId)
                             .then((_) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
                             content: Text("Added to Playlist"),
                             backgroundColor: Colors.green,
                           ));
@@ -150,17 +151,21 @@ class MoreOptionsVideo extends StatelessWidget {
                 child: TextButton.icon(
                   onPressed: () async {
                     await removeVideosFromPlaylists(
-                            videoId: videos[index].videoId, playlistId: playlistId)
+                            videoId: videos[index].videoId,
+                            playlistId: playlistId)
                         .then((_) {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text("${videos[index].videoTitle} deleted successfully"),
+                        content: Text(
+                            "${videos[index].videoTitle} deleted successfully"),
                         backgroundColor: Colors.green,
                       ));
                     });
                     Provider.of<CustomVideosProvider>(context, listen: false)
                         .getCustomVideosProvider(playlistId);
+                    Provider.of<RecentlyFavouriteVideosProvider>(context,
+                            listen: false)
+                        .getFavouritesVideosProvider();
                   },
                   label: const Text(
                     "Delete",

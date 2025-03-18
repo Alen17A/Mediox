@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mediox/data/functions/audio/playlists_audios.dart';
+import 'package:mediox/data/functions/video/playlists_videos.dart';
 import 'package:mediox/presentation/pages/audio/audio_home/audios_home.dart';
 import 'package:mediox/presentation/pages/video/video_home/videos_home.dart';
 import 'package:mediox/services/provider/audio/custom_playlist_provider.dart';
+import 'package:mediox/services/provider/video/custom_playlists_videos_provider.dart';
 import 'package:provider/provider.dart';
 
 class FloatingBottomNavBar extends StatelessWidget {
-  const FloatingBottomNavBar({super.key});
+  final bool isVideo;
+  const FloatingBottomNavBar({super.key, this.isVideo = false});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +32,8 @@ class FloatingBottomNavBar extends StatelessWidget {
                   color: const Color(0XFF253D2C),
                   boxShadow: const [
                     BoxShadow(
-                      color: Color.fromARGB(255, 228, 232, 229),
-                      blurRadius: 20,
+                      color: Colors.grey,
+                      blurRadius: 10,
                       spreadRadius: 5,
                     )
                   ]),
@@ -81,18 +85,54 @@ class FloatingBottomNavBar extends StatelessWidget {
                                             onPressed: () async {
                                               String playlistName =
                                                   playlistTextController.text;
-                                              if (playlistName.isNotEmpty) {
-                                                Navigator.pop(context);
+                                              if (playlistName.trim().isEmpty) {
                                                 ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
+                                                    .showSnackBar(
+                                                        const SnackBar(
                                                   content: Text(
-                                                      "Playlist $playlistName created"),
-                                                  backgroundColor: Colors.green,
+                                                      "Enter a name for the playlist"),
+                                                  backgroundColor: Colors.red,
                                                 ));
-                                                Provider.of<CustomPlaylistProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .getCustomPlaylistProvider();
+                                              } else {
+                                                if (isVideo) {
+                                                  await addVideoToPlaylist(
+                                                          playlistName:
+                                                              playlistName)
+                                                      .then((_) {
+                                                    Navigator.pop(context);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Playlist $playlistName created"),
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ));
+                                                  });
+                                                  Provider.of<CustomPlaylistsVideosProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .getCustomPlaylistVideosProvider();
+                                                } else {
+                                                  await addSongToPlaylist(
+                                                          playlistName:
+                                                              playlistName)
+                                                      .then((_) {
+                                                    Navigator.pop(context);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Playlist $playlistName created"),
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                    ));
+                                                  });
+                                                  Provider.of<CustomPlaylistProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .getCustomPlaylistProvider();
+                                                }
                                               }
                                             },
                                             child: const Text("OK")),

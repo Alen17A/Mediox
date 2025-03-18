@@ -57,7 +57,7 @@ Future<List<AudioModel>> mostlyAudios() async {
   for (int key in audioBox.keys) {
     AudioModel? audioModel = await audioBox.get(key);
     if (audioModel != null) {
-      if (audioModel.playCount > 0) {
+      if (audioModel.playCount > 5) {
         audios.add(audioModel);
       }
     }

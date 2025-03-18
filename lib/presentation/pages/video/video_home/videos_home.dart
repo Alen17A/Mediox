@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:mediox/presentation/pages/video/video_home/videos_search.dart';
-import 'package:mediox/presentation/pages/video/video_home/widgets/all_playlists_videos/all_playlists_videos.dart';
-import 'package:mediox/presentation/pages/video/video_home/widgets/all_videos/all_videos.dart';
-import 'package:mediox/presentation/pages/video/video_home/widgets/mostly_videos/mostly_videos.dart';
-import 'package:mediox/presentation/pages/video/video_home/widgets/recently_videos/recently_videos.dart';
+import 'package:mediox/presentation/pages/video/video_home/widgets/videos_search.dart';
+import 'package:mediox/presentation/pages/video/all_playlists_videos/all_playlists_videos.dart';
+import 'package:mediox/presentation/pages/video/all_videos/all_videos.dart';
+import 'package:mediox/presentation/pages/video/mostly_videos/mostly_videos.dart';
+import 'package:mediox/presentation/pages/video/recently_videos/recently_videos.dart';
 import 'package:mediox/presentation/widgets/floating_bottom_navbar.dart';
+import 'package:mediox/services/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class VideoHome extends StatelessWidget {
   const VideoHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -58,16 +62,21 @@ class VideoHome extends StatelessWidget {
                   child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const VideoHome())),
-                child: Image.asset("assets/images/MEDIOX_2.png"),
+                child: Image.asset("assets/gifs/MEDIOX_light_bg_removed.gif"),
               )),
               ListTile(
-                title: const Text("Settings"),
-                trailing: const Icon(Icons.settings),
-                onTap: () {},
+                title: const Text("Dark Mode"),
+                trailing: Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (value) {
+                    themeProvider.toggleTheme(value);
+                  },
+                  activeColor: Colors.green,
+                ),
               ),
               ListTile(
-                title: const Text("Help"),
-                trailing: const Icon(Icons.help),
+                title: const Text("Sync Videos"),
+                trailing: const Icon(Icons.sync),
                 onTap: () {},
               ),
               ListTile(
@@ -92,7 +101,7 @@ class VideoHome extends StatelessWidget {
               MostlyVideos(),
               AllPlaylistsVideos(),
             ]),
-            FloatingBottomNavBar(),
+            FloatingBottomNavBar(isVideo: true,),
           ],
         ),
       ),

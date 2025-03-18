@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mediox/data/models/video/video_model.dart';
 import 'package:mediox/data/models/video/video_playlist_model.dart';
@@ -7,8 +8,10 @@ late LazyBox<VideoPlaylistModel> playlistModelVideoBox;
 // Add to playlist (Recents, favourites and custom)
 Future<void> addVideoToPlaylist(
     {String? playlistId,
-    required List<VideoModel> playlistVideos,
+    List<VideoModel>? playlistVideos,
     String? playlistName}) async {
+playlistVideos ??= [];
+
   if (playlistId == null) {
     //For custom playlists when creating for first time
     playlistId ??= DateTime.now().microsecondsSinceEpoch.toString();
@@ -59,7 +62,7 @@ Future<List<VideoModel>> getRecentlyVideos() async {
     recentlyVideos.addAll(recentlyPlayed.playlistVideos);
   }
 
-  return recentlyVideos;
+  return recentlyVideos.reversed.toList();
 }
 
 // Get favourite videos
@@ -127,6 +130,26 @@ Future<void> removeVideosFromPlaylists(
 
     // save to database
     await playlistModelVideoBox.put(playlistId, existsPlayListModel);
+  }
+}
+
+Future<void> updatePlaylistVideo(
+    {required String? playlistId, required String newPlaylistName}) async {
+  if (playlistId != null) {
+    final VideoPlaylistModel? playlist =
+        await playlistModelVideoBox.get(playlistId);
+    playlist!.playlistName = newPlaylistName;
+    // Save the updated playlist back into the Hive box.
+    await playlistModelVideoBox.put(playlistId, playlist);
+  } else {
+    debugPrint("Playlist not found for id: $playlistId");
+  }
+}
+
+Future<void> deletePlaylistVideo({required String? playlistId}) async {
+
+  if (playlistId != null) {
+    await playlistModelVideoBox.delete(playlistId);
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mediox/data/models/audio/audio_model.dart';
 import 'package:mediox/data/models/audio/audios_playlist_model.dart';
@@ -7,11 +8,14 @@ late LazyBox<AudioPlaylistModel> playlistModelAudioBox;
 // Add to playlist (Recents, favourites and custom)
 Future<void> addSongToPlaylist(
     {String? playlistId,
-    required List<AudioModel> playlistAudios,
+    List<AudioModel>? playlistAudios,
     String? playlistName}) async {
+  playlistAudios ??= [];
+
   if (playlistId == null) {
     //For custom playlists when creating for first time
     playlistId ??= DateTime.now().microsecondsSinceEpoch.toString();
+
     AudioPlaylistModel playlistModel = AudioPlaylistModel(
         playlistId: playlistId,
         playlistName: playlistName!,
@@ -23,10 +27,13 @@ Future<void> addSongToPlaylist(
         .get(playlistId); //If a playlist already exists, get its id.
 
     if (audioPlaylistModel != null) {
+      
       //If the audioPlaylistModel already contains some audios,
       for (AudioModel playlistAudio in playlistAudios) {
+
         //playlistAudios = Audios of the playlist that is get.
         audioPlaylistModel.playlistAudios.removeWhere(
+
             //remove audio from audioPlaylistModel if playlistAudios contains the same audio.
             (playlistSong) => playlistSong.audioId == playlistAudio.audioId);
       }
@@ -59,7 +66,7 @@ Future<List<AudioModel>> getRecentlySongs() async {
     recentlyAudios.addAll(recentlyPlayed.playlistAudios);
   }
 
-  return recentlyAudios;
+  return recentlyAudios.reversed.toList();
 }
 
 // Get favourite audios
@@ -126,6 +133,28 @@ Future<void> removeFromPlaylists(
 
     // save to database
     await playlistModelAudioBox.put(playlistId, existsPlayListModel);
+  }
+}
+
+Future<void> updatePlaylist(
+    {required String? playlistId, required String newPlaylistName}) async {
+  if (playlistId != null) {
+    final AudioPlaylistModel? playlist =
+        await playlistModelAudioBox.get(playlistId);
+    playlist!.playlistName = newPlaylistName;
+    // Save the updated playlist back into the Hive box.
+    await playlistModelAudioBox.put(playlistId, playlist);
+  } else {
+    debugPrint("Playlist not found for id: $playlistId");
+  }
+}
+
+Future<void> deletePlaylist({required String? playlistId}) async {
+  // final AudioPlaylistModel? existsPlayList =
+  //     await playlistModelAudioBox.get(playlistId);
+
+  if (playlistId != null) {
+    await playlistModelAudioBox.delete(playlistId);
   }
 }
 

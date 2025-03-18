@@ -13,12 +13,15 @@ import 'package:mediox/services/provider/audio/custom_audios_provider.dart';
 import 'package:mediox/services/provider/audio/custom_playlist_provider.dart';
 import 'package:mediox/services/provider/audio/get_audios_provider.dart';
 import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
+import 'package:mediox/services/provider/audio/audio_playback_provider.dart';
 import 'package:mediox/services/provider/audio/recently_favourite_audios.dart';
+import 'package:mediox/services/provider/theme_provider.dart';
 import 'package:mediox/services/provider/video/custom_playlists_videos_provider.dart';
 import 'package:mediox/services/provider/video/custom_videos_provider.dart';
 import 'package:mediox/services/provider/video/get_videos_provider.dart';
 import 'package:mediox/services/provider/video/mostly_videos_provider.dart';
 import 'package:mediox/services/provider/video/recently_favourite_videos.dart';
+import 'package:mediox/utilities/theme.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -26,7 +29,8 @@ void main() async {
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(AudioModelAdapter().typeId) ||
       !Hive.isAdapterRegistered(AudioPlaylistModelAdapter().typeId) ||
-      !Hive.isAdapterRegistered(VideoModelAdapter().typeId) || !Hive.isAdapterRegistered(VideoPlaylistModelAdapter().typeId)) {
+      !Hive.isAdapterRegistered(VideoModelAdapter().typeId) ||
+      !Hive.isAdapterRegistered(VideoPlaylistModelAdapter().typeId)) {
     Hive.registerAdapter(AudioModelAdapter());
     Hive.registerAdapter(AudioPlaylistModelAdapter());
     Hive.registerAdapter(VideoModelAdapter());
@@ -48,6 +52,9 @@ class Mediox extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+        ),
         ChangeNotifierProvider(
           create: (context) => GetAudiosProvider(),
         ),
@@ -78,11 +85,19 @@ class Mediox extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => CustomVideosProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => AudioPlaybackProvider(),
+        ),
       ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-      ),
+      child: Consumer<ThemeProvider>(builder: (context, themeProvider, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: const SplashScreen(),
+        );
+      }),
     );
   }
 }

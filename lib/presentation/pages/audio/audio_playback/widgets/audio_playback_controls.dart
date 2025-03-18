@@ -4,6 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:mediox/data/functions/audio/playlists_audios.dart';
 import 'package:mediox/data/models/audio/audio_model.dart';
 import 'package:mediox/presentation/pages/audio/audio_playback/widgets/queryartwork_bg.dart';
+import 'package:mediox/services/provider/audio/audio_playback_controls_provider.dart';
 import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
 import 'package:mediox/services/provider/audio/recently_favourite_audios.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -27,12 +28,6 @@ class _AudioPlaybackState extends State<AudioPlayback> {
   bool isRepeating = false;
   Duration totalDuration = Duration.zero;
   Duration durationPosition = Duration.zero;
-
-  @override
-  void initState() {
-    initAudioPlayback();
-    super.initState();
-  }
 
   Future<void> initAudioPlayback() async {
     audioPlayer = AudioPlayer();
@@ -79,7 +74,6 @@ class _AudioPlaybackState extends State<AudioPlayback> {
       audioPlayer.pause();
     } else {
       audioPlayer.play();
-      
     }
     setState(() {
       isPlaying = !isPlaying;
@@ -244,7 +238,10 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                             height: 250,
                             decoration: const BoxDecoration(
                               // color: Colors.grey,
-                              gradient: LinearGradient(colors: [Colors.green, Color.fromARGB(255, 20, 101, 22)]),
+                              gradient: LinearGradient(colors: [
+                                Colors.green,
+                                Color.fromARGB(255, 20, 101, 22)
+                              ]),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.music_note,
@@ -273,79 +270,109 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                     ],
                   ),
                   // Playback slider and durations
-                  Column(
-                    children: [
-                      Slider(
-                        thumbColor: const Color(0xff253D2C),
-                        activeColor: Colors.white,
-                        inactiveColor: const Color.fromARGB(255, 80, 80, 80),
-                        min: 0,
-                        max: totalDuration.inSeconds > 0
-                            ? totalDuration.inSeconds.toDouble()
-                            : 1.0,
-                        value: durationPosition.inSeconds
-                            .toDouble()
-                            .clamp(0.0, totalDuration.inSeconds.toDouble()),
-                        onChanged: (value) {
-                          final newPosition = Duration(seconds: value.toInt());
-                          audioPlayer.seek(newPosition);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(formatDuration(durationPosition),
-                                style: const TextStyle(color: Colors.white)),
-                            Text(formatDuration(totalDuration),
-                                style: const TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                    ],
+                  // Playback slider and durations
+                  Consumer<AudioPlaybackControlsProvider>(
+                    builder: (context, audioPlaybackControls, _) {
+                      return Column(
+                        children: [
+                          Slider(
+                            thumbColor: const Color(0xff253D2C),
+                            activeColor: Colors.white,
+                            inactiveColor:
+                                const Color.fromARGB(255, 80, 80, 80),
+                            min: 0,
+                            max: audioPlaybackControls.totalDuration.inSeconds > 0
+                                ? audioPlaybackControls.totalDuration.inSeconds
+                                    .toDouble()
+                                : 1.0,
+                            value: audioPlaybackControls
+                                .durationPosition.inSeconds
+                                .toDouble()
+                                .clamp(
+                                    0.0,
+                                    audioPlaybackControls
+                                        .totalDuration.inSeconds
+                                        .toDouble()),
+                            onChanged: (value) {
+                              final newPosition =
+                                  Duration(seconds: value.toInt());
+                              audioPlaybackControls.audioPlayer.seek(newPosition);
+                            },
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    formatDuration(
+                                        audioPlaybackControls.durationPosition),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                                Text(
+                                    formatDuration(
+                                        audioPlaybackControls.totalDuration),
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   // Playback controls row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: toggleRepeat,
-                        icon: Icon(
-                          isRepeating ? Icons.repeat_one : Icons.repeat,
-                          size: 30,
-                          color: isRepeating ? Colors.green : Colors.white70,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: skipPrevious,
-                        icon: const Icon(Icons.skip_previous,
-                            size: 40, color: Colors.white),
-                      ),
-                      IconButton(
-                        onPressed: playPause,
-                        icon: Icon(
-                          isPlaying
-                              ? Icons.pause_rounded
-                              : Icons.play_arrow_rounded,
-                          size: 80,
-                          color: Colors.white,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: skipNext,
-                        icon: const Icon(Icons.skip_next,
-                            size: 40, color: Colors.white),
-                      ),
-                      IconButton(
-                        onPressed: shuffleAudios,
-                        icon: Icon(
-                          Icons.shuffle,
-                          size: 30,
-                          color: isShuffle ? Colors.green : Colors.white70,
-                        ),
-                      ),
-                    ],
+                  Consumer<AudioPlaybackControlsProvider>(
+                    builder: (context, audioPlaybackControls, _) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            onPressed: toggleRepeat,
+                            icon: Icon(
+                              audioPlaybackControls.isRepeating
+                                  ? Icons.repeat_one
+                                  : Icons.repeat,
+                              size: 30,
+                              color: audioPlaybackControls.isRepeating
+                                  ? Colors.green
+                                  : Colors.white70,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: skipPrevious,
+                            icon: const Icon(Icons.skip_previous,
+                                size: 40, color: Colors.white),
+                          ),
+                          IconButton(
+                            onPressed: playPause,
+                            icon: Icon(
+                              audioPlaybackControls.isPlaying
+                                  ? Icons.pause_rounded
+                                  : Icons.play_arrow_rounded,
+                              size: 80,
+                              color: Colors.white,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: skipNext,
+                            icon: const Icon(Icons.skip_next,
+                                size: 40, color: Colors.white),
+                          ),
+                          IconButton(
+                            onPressed: shuffleAudios,
+                            icon: Icon(
+                              Icons.shuffle,
+                              size: 30,
+                              color: audioPlaybackControls.isShuffle
+                                  ? Colors.green
+                                  : Colors.white70,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),
@@ -355,10 +382,4 @@ class _AudioPlaybackState extends State<AudioPlayback> {
       ),
     );
   }
-
-  // @override
-  // void dispose() {
-  //   audioPlayer.dispose();
-  //   super.dispose();
-  // }
 }

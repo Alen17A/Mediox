@@ -5,6 +5,7 @@ import 'package:mediox/data/models/video/video_model.dart';
 class RecentlyFavouriteVideosProvider extends ChangeNotifier {
   List<VideoModel> recentlyVideos = [];
   List<VideoModel> favouriteVideos = [];
+  String searchQuery = "";
 
   Future<void> getRecentlyVideosProvider() async {
     recentlyVideos = await getRecentlyVideos();
@@ -14,5 +15,34 @@ class RecentlyFavouriteVideosProvider extends ChangeNotifier {
   Future<void> getFavouritesVideosProvider() async {
     favouriteVideos = await getFavouriteVideos();
     notifyListeners();
+  }
+
+  void search(String query) {
+    searchQuery = query;
+    notifyListeners();
+  }
+
+  List<VideoModel> filteredVideosRecents() {
+    if (searchQuery.isEmpty) {
+      return recentlyVideos;
+    } else {
+      return recentlyVideos.where((video) {
+        return video.videoTitle
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
+  List<VideoModel> filteredVideoFavorites() {
+    if (searchQuery.isEmpty) {
+      return favouriteVideos;
+    } else {
+      return favouriteVideos.where((video) {
+        return video.videoTitle
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase());
+      }).toList();
+    }
   }
 }

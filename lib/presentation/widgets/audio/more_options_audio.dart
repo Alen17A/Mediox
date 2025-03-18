@@ -7,20 +7,22 @@ import 'package:mediox/services/provider/audio/recently_favourite_audios.dart';
 import 'package:provider/provider.dart';
 
 class MoreOptionsAudio extends StatelessWidget {
-  const MoreOptionsAudio({
-    super.key,
-    required this.songs,
-    required this.playlistId,
-    required this.index
-  });
+  const MoreOptionsAudio(
+      {super.key,
+      required this.songs,
+      required this.playlistId,
+      required this.index,
+      this.showDelete = true});
 
   final List<AudioModel> songs;
   final String? playlistId;
   final int index;
+  final bool showDelete;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
+      iconColor: Colors.white,
         itemBuilder: (context) => [
               PopupMenuItem(
                 child: TextButton.icon(
@@ -41,7 +43,6 @@ class MoreOptionsAudio extends StatelessWidget {
                   },
                   label: const Text(
                     "Add to favourites",
-                    style: TextStyle(color: Colors.black),
                   ),
                   icon: const Icon(
                     Icons.favorite,
@@ -64,14 +65,21 @@ class MoreOptionsAudio extends StatelessWidget {
                                     "Create new playlist",
                                     style: TextStyle(color: Colors.green),
                                   ),
-                                  content: TextField(
-                                    onChanged: (value) => playlistName = value,
-                                    decoration: const InputDecoration(
-                                        hintText: "Playlist Name"),
+                                  content: GestureDetector(
+                                    onTap: () =>
+                                        FocusScope.of(context).unfocus(),
+                                    child: TextField(
+                                      autofocus: true,
+                                      onChanged: (value) =>
+                                          playlistName = value,
+                                      decoration: const InputDecoration(
+                                          hintText: "Playlist Name"),
+                                    ),
                                   ),
                                   actions: [
                                     ElevatedButton(
                                         onPressed: () async {
+                                          FocusScope.of(context).unfocus();
                                           if (playlistName.trim().isEmpty) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(const SnackBar(
@@ -102,7 +110,10 @@ class MoreOptionsAudio extends StatelessWidget {
                                         },
                                         child: const Text("OK")),
                                     ElevatedButton(
-                                        onPressed: () => Navigator.pop(context),
+                                        onPressed: () {
+                                          FocusScope.of(context).unfocus();
+                                          Navigator.pop(context);
+                                        },
                                         child: const Text("Close"))
                                   ],
                                 ));
@@ -130,7 +141,7 @@ class MoreOptionsAudio extends StatelessWidget {
                     items: [
                       const DropdownMenuItem(
                         value: "0",
-                        child: Text("Create new playlist",
+                        child: Text("Create new Playlist",
                             style: TextStyle(color: Colors.green)),
                       ),
                       ...List.generate(
@@ -148,33 +159,37 @@ class MoreOptionsAudio extends StatelessWidget {
                   ),
                 ),
               ),
-              PopupMenuItem(
-                child: TextButton.icon(
-                  onPressed: () async {
-                    await removeFromPlaylists(
-                            audioId: songs[index].audioId,
-                            playlistId: playlistId)
-                        .then((_) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text("${songs[index].title} deleted successfully"),
-                        backgroundColor: Colors.green,
-                      ));
-                    });
-                    Provider.of<CustomAudiosProvider>(context, listen: false)
-                        .getCustomAudiosProvider(playlistId);
-                  },
-                  label: const Text(
-                    "Delete",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
+              if (showDelete)
+                PopupMenuItem(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      await removeFromPlaylists(
+                              audioId: songs[index].audioId,
+                              playlistId: playlistId)
+                          .then((_) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "${songs[index].title} deleted successfully"),
+                          backgroundColor: Colors.green,
+                        ));
+                      });
+                      Provider.of<CustomAudiosProvider>(context, listen: false)
+                          .getCustomAudiosProvider(playlistId);
+                      Provider.of<RecentlyFavouriteAudiosProvider>(context,
+                              listen: false)
+                          .getFavouritesProvider();
+                    },
+                    label: const Text(
+                      "Delete",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-              ),
             ]);
   }
 }

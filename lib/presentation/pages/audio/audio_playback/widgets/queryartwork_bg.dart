@@ -13,7 +13,15 @@ class QueryArtWorkBackground extends StatelessWidget {
             type: ArtworkType.AUDIO,
             artworkFit: BoxFit.cover,
             artworkQuality: FilterQuality.high,
-            nullArtworkWidget: Container(color: Colors.grey),
+            nullArtworkWidget: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green, Colors.white],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
             keepOldArtwork: true,
           );
   }
