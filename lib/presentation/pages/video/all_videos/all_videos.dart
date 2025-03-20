@@ -9,6 +9,7 @@ class AllVideos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "All Videos";
     return Consumer<GetVideosProvider>(
         builder: (context, getVideosProvider, _) {
       // List<VideoModel> videos = getVideosProvider.allVideos;
@@ -18,7 +19,7 @@ class AllVideos extends StatelessWidget {
           child: Text("No Videos found"),
         );
       }
-      return GridViewVideos(videos: videos);
+      return GridViewVideos(videos: videos, showMoreOptions: true, showDelete: false, category: category,);
     });
   }
 }

@@ -58,7 +58,7 @@ Future<List<VideoModel>> mostlyVideos() async {
   for (String key in videoBox.keys) {
     VideoModel? videoModel = await videoBox.get(key);
     if (videoModel != null) {
-      if (videoModel.playCount > 0) {
+      if (videoModel.playCount >= 5) {
         videos.add(videoModel);
       }
     }

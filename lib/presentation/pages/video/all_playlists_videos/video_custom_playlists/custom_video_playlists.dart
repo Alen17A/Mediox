@@ -27,7 +27,7 @@ class CustomVideos extends StatelessWidget {
           return const Center(child: Text('No videos'));
         }
         List<VideoModel> videos = customVideosProvider.customVideos;
-        return GridViewVideos(videos: videos, playlistId: playlistId,);
+        return GridViewVideos(videos: videos, playlistId: playlistId, showMoreOptions: true, category: playlistName,);
       }),
     );
   }

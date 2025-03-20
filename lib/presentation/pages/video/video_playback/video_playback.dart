@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mediox/data/functions/video/playlists_videos.dart';
 import 'package:mediox/data/models/video/video_model.dart';
+import 'package:mediox/presentation/pages/video/video_playback/widgets/add_to_playlist_videos.dart';
 import 'package:mediox/services/provider/video/mostly_videos_provider.dart';
 import 'package:mediox/services/provider/video/recently_favourite_videos.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,9 @@ import 'package:video_player/video_player.dart';
 class VideoPlayback extends StatefulWidget {
   final List<VideoModel> playbackVideos;
   final int videoIndex;
-  const VideoPlayback(
-      {super.key, required this.playbackVideos, required this.videoIndex});
+  String? category;
+  VideoPlayback(
+      {super.key, required this.playbackVideos, required this.videoIndex, this.category});
 
   @override
   State<VideoPlayback> createState() => _VideoPlaybackState();
@@ -131,6 +133,17 @@ class _VideoPlaybackState extends State<VideoPlayback> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+          title: Text(
+            widget.category ??= "",
+            style: const TextStyle(color: Colors.white),
+          ),
+          iconTheme:
+              const IconThemeData(color: Color.fromARGB(255, 194, 192, 192)),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+        ),
         backgroundColor: Colors.black,
         body: Stack(
           alignment: AlignmentDirectional.center,
@@ -172,7 +185,7 @@ class _VideoPlaybackState extends State<VideoPlayback> {
               ],
             ),
             Positioned(
-              bottom: 100,
+              bottom: 140,
               left: 0,
               right: 0,
               child: Slider(
@@ -188,7 +201,7 @@ class _VideoPlaybackState extends State<VideoPlayback> {
               ),
             ),
             Positioned(
-              bottom: 80,
+              bottom: 120,
               left: 0,
               right: 0,
               child: Row(
@@ -205,6 +218,46 @@ class _VideoPlaybackState extends State<VideoPlayback> {
                     formatDuration(totalDuration),
                     style: const TextStyle(color: Colors.white),
                   ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 40,
+              left: 20,
+              right: 20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Consumer<RecentlyFavouriteVideosProvider>(
+                    builder: (context, isFavouriteProvider, _) {
+                      bool isFav =
+                          isFavouriteProvider.isFavourite(widget.playbackVideos[currentIndex].videoId);
+                      return IconButton(
+                        onPressed: () {
+                          isFavouriteProvider.toggleFavourites(widget.playbackVideos[currentIndex]);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(isFav
+                                  ? "Removed from favourites"
+                                  : "Added to favourites"),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          size: 30,
+                          color: isFav ? Colors.red : Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                  AddToPlaylistVideos(videos: widget.playbackVideos[currentIndex]),
+                  // IconButton(
+                  //     onPressed: () {
+                  //       showAddToPlaylistDialog(context, currentSong);
+                  //     },
+                  //     icon: const Icon(Icons.playlist_add)),
                 ],
               ),
             ),

@@ -17,6 +17,10 @@ class AudioHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    String gifMode = isDark
+        ? "assets/gifs/MEDIOX_dark_bg_removed.gif"
+        : "assets/gifs/MEDIOX_light_bg_removed.gif";
 
     return DefaultTabController(
       length: 4,
@@ -63,7 +67,11 @@ class AudioHome extends StatelessWidget {
                   child: TextButton(
                 onPressed: () => Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const AudioHome())),
-                child: Image.asset("assets/gifs/MEDIOX_light_bg_removed.gif"),
+                child: Image.asset(
+                  gifMode,
+                  width: 900,
+                  height: 900,
+                ),
               )),
               ListTile(
                 title: const Text("Dark Mode"),
@@ -82,17 +90,65 @@ class AudioHome extends StatelessWidget {
                   await fetchMP3SongsWithHive();
                   Provider.of<GetAudiosProvider>(context, listen: false)
                       .getAllAudios();
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Audios synced successfully"),
+                    backgroundColor: Colors.green,
+                  ));
+                },
+              ),
+              ListTile(
+                title: const Text("Privacy Policy"),
+                trailing: const Icon(Icons.privacy_tip_outlined),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text("Privacy Policy"),
+                            content: const Text(
+                                "Mediox is designed solely to play audio and video files that are already stored on your device. We do not collect, store, or transmit any personal data or your media content. The permissions requested are used exclusively to access and display the media files you already have. No media file or personal data is sent to any external server or third party."),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("OK"))
+                            ],
+                          ));
                 },
               ),
               ListTile(
                 title: const Text("Contact Us"),
                 trailing: const Icon(Icons.call),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text("Contact Us"),
+                            content: const Text(
+                                "If you have any queries or suggestions, feel free to reach out to me via email at alenjdeveloper@gmail.com. I appreciate your feedback and look forward to improving the app to enhance your experience."),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("OK"))
+                            ],
+                          ));
+                },
               ),
               ListTile(
                 title: const Text("About Us"),
                 trailing: const Icon(Icons.person),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text("About Us"),
+                            content: const Text(
+                                "My aim is to build one of the best and most efficient applications that help people feel relaxed. Through innovation and simplicity, I strive to create user-friendly apps that bring ease and comfort to everyday life."),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("OK"))
+                            ],
+                          ));
+                },
               )
             ],
           ),
@@ -101,12 +157,12 @@ class AudioHome extends StatelessWidget {
           children: [
             Container(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.green, Colors.white],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
+                  // gradient: LinearGradient(
+                  //   colors: [Colors.green, Colors.white],
+                  //   begin: Alignment.topLeft,
+                  //   end: Alignment.bottomRight,
+                  // ),
+                  ),
             ),
             const TabBarView(children: [
               AllAudios(),

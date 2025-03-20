@@ -9,13 +9,14 @@ class RecentlyVideos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "Recently Played";
     return Consumer<RecentlyFavouriteVideosProvider>(
         builder: (context, recentlyPlayedVideosProvider, _) {
       List<VideoModel> videos = recentlyPlayedVideosProvider.filteredVideosRecents();
       if (videos.isEmpty) {
         return const Center(child: Text('No recents found.'));
       }
-      return GridViewVideos(videos: videos);
+      return GridViewVideos(videos: videos, category: category,);
     });
   }
 }

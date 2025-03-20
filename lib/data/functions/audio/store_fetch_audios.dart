@@ -12,7 +12,7 @@ Future<void> fetchMP3SongsWithHive() async {
   if (hasPermission) {
     var allSongs = await audioQuery.querySongs(
       sortType: SongSortType.DATE_ADDED,
-      path: "/storage/emulated/0/Music",
+      // path: "/storage/emulated/0/Music",
     );
     var mp3Songs = allSongs.where((song) {
       return song.fileExtension == "mp3";
@@ -57,7 +57,7 @@ Future<List<AudioModel>> mostlyAudios() async {
   for (int key in audioBox.keys) {
     AudioModel? audioModel = await audioBox.get(key);
     if (audioModel != null) {
-      if (audioModel.playCount > 5) {
+      if (audioModel.playCount >= 5) {
         audios.add(audioModel);
       }
     }

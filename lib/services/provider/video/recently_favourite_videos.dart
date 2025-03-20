@@ -45,4 +45,17 @@ class RecentlyFavouriteVideosProvider extends ChangeNotifier {
       }).toList();
     }
   }
+
+  bool isFavourite(String videoId) {
+    return favouriteVideos.any((video) => video.videoId == videoId);
+  }
+
+  void toggleFavourites(VideoModel video) {
+    if (isFavourite(video.videoId)) {
+      favouriteVideos.removeWhere((item) => item.videoId == video.videoId);
+    } else {
+      favouriteVideos.add(video);
+    }
+    notifyListeners();
+  }
 }

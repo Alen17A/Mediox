@@ -28,6 +28,7 @@ class CustomAudios extends StatelessWidget {
           songs: songs,
           showMoreOptions: true,
           playlistId: playListId,
+          category: playlistName,
         );
       }),
     );

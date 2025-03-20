@@ -9,13 +9,14 @@ class RecentlyAudios extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "Recently Played";
     return Consumer<RecentlyFavouriteAudiosProvider>(
         builder: (context, recentlyPlayedProvider, _) {
       List<AudioModel> songs = recentlyPlayedProvider.filteredSongsRecents();
       if (songs.isEmpty) {
         return const Center(child: Text('No recents found.'));
       }
-      return AudioTile(songs: songs,);
+      return AudioTile(songs: songs, category: category,);
     });
   }
 }

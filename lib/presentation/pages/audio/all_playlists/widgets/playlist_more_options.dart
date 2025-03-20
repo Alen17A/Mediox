@@ -8,7 +8,10 @@ class PlaylistMoreOptions extends StatelessWidget {
   final String playlistId;
   final String playlistName;
   const PlaylistMoreOptions(
-      {super.key, required this.playlistId, required this.playlistName, this.showDelete = false});
+      {super.key,
+      required this.playlistId,
+      required this.playlistName,
+      this.showDelete = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +20,11 @@ class PlaylistMoreOptions extends StatelessWidget {
           switch (value) {
             case "edit":
               String newName = playlistName;
-              showDialog(context: context, builder: (context) => AlertDialog(
-                title: const Text("New Playlist Name"),
-                content: GestureDetector(
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: const Text("New Playlist Name"),
+                        content: GestureDetector(
                           onTap: () => FocusScope.of(context).unfocus(),
                           child: TextField(
                             autofocus: true,
@@ -28,35 +33,38 @@ class PlaylistMoreOptions extends StatelessWidget {
                                 hintText: "New Playlist Name"),
                           ),
                         ),
-                actions: [
-                  ElevatedButton(
-          onPressed: () async {
-            if (newName.trim().isNotEmpty && newName != playlistName) {
-              await updatePlaylist(
-                playlistId: playlistId,
-                newPlaylistName: newName,
-              );
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Playlist renamed to $newName"),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Provider.of<CustomPlaylistProvider>(context, listen: false)
-                  .getCustomPlaylistProvider();
-            }
-          },
-          child: const Text("Update"),
-        ),
-                  ElevatedButton(
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (newName.trim().isNotEmpty &&
+                                  newName != playlistName) {
+                                await updatePlaylist(
+                                  playlistId: playlistId,
+                                  newPlaylistName: newName,
+                                );
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text("Playlist renamed to $newName"),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                                Provider.of<CustomPlaylistProvider>(context,
+                                        listen: false)
+                                    .getCustomPlaylistProvider();
+                              }
+                            },
+                            child: const Text("Update"),
+                          ),
+                          ElevatedButton(
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 Navigator.pop(context);
                               },
                               child: const Text("Close"))
-                ],
-              ));
+                        ],
+                      ));
               break;
             case "delete":
               await deletePlaylist(playlistId: playlistId).then((_) {

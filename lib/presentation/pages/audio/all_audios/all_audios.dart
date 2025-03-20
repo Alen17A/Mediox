@@ -9,6 +9,7 @@ class AllAudios extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "All Audios";
     return Consumer<GetAudiosProvider>(
         builder: (context, allAudiosProvider, _) {
       List<AudioModel> songs = allAudiosProvider.filteredSongs();
@@ -19,6 +20,7 @@ class AllAudios extends StatelessWidget {
         songs: songs,
         showMoreOptions: true,
         showDelete: false,
+        category: category,
       );
     });
   }

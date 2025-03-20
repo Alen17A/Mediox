@@ -9,13 +9,14 @@ class MostlyVideos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "Mostly Played";
     return Consumer<MostlyVideosProvider>(
         builder: (context, mostlyVideosProvider, _) {
       List<VideoModel> videos = mostlyVideosProvider.filteredVideosMostly();
       if (videos.isEmpty) {
         return const Center(child: Text('No videos found'));
       }
-      return GridViewVideos(videos: videos);
+      return GridViewVideos(videos: videos, category: category,);
     });
   }
 }

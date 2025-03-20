@@ -12,18 +12,19 @@ class MoreOptionsAudio extends StatelessWidget {
       required this.songs,
       required this.playlistId,
       required this.index,
-      this.showDelete = true});
+      this.showDelete = true, this.inPlaylist = true});
 
   final List<AudioModel> songs;
   final String? playlistId;
   final int index;
   final bool showDelete;
+  final bool inPlaylist;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      iconColor: Colors.white,
         itemBuilder: (context) => [
+            if(inPlaylist)
               PopupMenuItem(
                 child: TextButton.icon(
                   onPressed: () async {
@@ -131,11 +132,6 @@ class MoreOptionsAudio extends StatelessWidget {
                         Provider.of<CustomPlaylistProvider>(context,
                                 listen: false)
                             .getCustomPlaylistProvider();
-                        // Provider.of<CustomAudiosProvider>(
-                        //         context,
-                        //         listen: false)
-                        //     .getCustomAudiosProvider(
-                        //         playlistId);
                       }
                     },
                     items: [
@@ -170,7 +166,7 @@ class MoreOptionsAudio extends StatelessWidget {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
-                              "${songs[index].title} deleted successfully"),
+                              "${songs[index].title} removed successfully"),
                           backgroundColor: Colors.green,
                         ));
                       });
@@ -181,7 +177,7 @@ class MoreOptionsAudio extends StatelessWidget {
                           .getFavouritesProvider();
                     },
                     label: const Text(
-                      "Delete",
+                      "Remove",
                       style: TextStyle(color: Colors.red),
                     ),
                     icon: const Icon(

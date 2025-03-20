@@ -39,11 +39,6 @@ class AllPlaylists extends StatelessWidget {
                     "Favourites",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  trailing: PlaylistMoreOptions(
-                    showDelete: false,
-                    playlistId: "favourite",
-                    playlistName: "Favourites",
-                  ),
                 ),
               ),
             ),

@@ -47,6 +47,7 @@ dependencies:
   video_thumbnail: ^0.5.3
   palette_generator: ^0.3.3+6
   shared_preferences: ^2.5.2
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -104,3 +105,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: "launcher_icon"  # Name of the icon for Android
+  ios: true                # Enable for iOS
+  image_path: "assets/icons/MEDIOX_LOGO.png"  # Path to your logo image
+  # min_sdk_android: 21      # Optional: Minimum Android SDK version
+  # remove_alpha_ios: true   # Optional: Remove alpha channel for iOS (if needed)

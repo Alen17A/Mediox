@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:mediox/data/functions/audio/playlists_audios.dart';
 import 'package:mediox/data/models/audio/audio_model.dart';
+import 'package:mediox/presentation/pages/audio/audio_playback/widgets/add_to_playlist_audios.dart';
 import 'package:mediox/presentation/pages/audio/audio_playback/widgets/queryartwork_bg.dart';
 import 'package:mediox/services/provider/audio/audio_playback_provider.dart';
+import 'package:mediox/services/provider/audio/custom_audios_provider.dart';
+import 'package:mediox/services/provider/audio/custom_playlist_provider.dart';
 import 'package:mediox/services/provider/audio/mostly_played_provider.dart';
 import 'package:mediox/services/provider/audio/recently_favourite_audios.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -11,8 +15,9 @@ import 'package:provider/provider.dart';
 class AudioPlaybackTestProvider extends StatefulWidget {
   final List<AudioModel> audioFile;
   final int index;
-  const AudioPlaybackTestProvider(
-      {required this.audioFile, required this.index, super.key});
+  String? category;
+  AudioPlaybackTestProvider(
+      {required this.audioFile, required this.index, this.category, super.key});
 
   @override
   State<AudioPlaybackTestProvider> createState() => _AudioPlaybackState();
@@ -52,7 +57,17 @@ class _AudioPlaybackState extends State<AudioPlaybackTestProvider> {
     final currentSong =
         audioPlaybackProvider.audioFiles[audioPlaybackProvider.currentIndex];
     return Scaffold(
-      backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Text(
+          widget.category ??= "",
+          style: const TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 194, 192, 192)),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+      ),
+      // backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -68,7 +83,9 @@ class _AudioPlaybackState extends State<AudioPlaybackTestProvider> {
           // Main content overlay
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -100,16 +117,12 @@ class _AudioPlaybackState extends State<AudioPlaybackTestProvider> {
                           );
                         },
                       ),
-                      IconButton(
-                        onPressed: () {
-                          // showAddToPlaylistDialog(context, currentSong);
-                        },
-                        icon: const Icon(
-                          Icons.playlist_add,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
+                      AddToPlaylistAudios(songs: currentSong),
+                      // IconButton(
+                      //     onPressed: () {
+                      //       showAddToPlaylistDialog(context, currentSong);
+                      //     },
+                      //     icon: const Icon(Icons.playlist_add)),
                     ],
                   ),
                   // Center: Album artwork, artist, and title
@@ -298,6 +311,119 @@ class _AudioPlaybackState extends State<AudioPlaybackTestProvider> {
           ),
         ],
       ),
+    );
+  }
+
+  void showAddToPlaylistDialog(BuildContext context, AudioModel currentSong) {
+    // Same implementation as before, just use currentSong directly
+    showDialog(
+      context: context,
+      builder: (context) {
+        String playlistName = "";
+        return AlertDialog(
+          title: const Text("Add to Playlist"),
+          content: Consumer<CustomPlaylistProvider>(
+            builder: (context, customPlaylistProvider, _) {
+              return DropdownButtonFormField<String>(
+                value: "0",
+                onChanged: (playlistId) async {
+                  if (playlistId == "0") {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Create new playlist"),
+                        content: TextField(
+                          onChanged: (value) => playlistName = value,
+                          decoration: const InputDecoration(
+                            hintText: "Playlist Name",
+                          ),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (playlistName.trim().isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text("Enter a name for the playlist"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              } else {
+                                await addSongToPlaylist(
+                                  playlistAudios: [currentSong],
+                                  playlistName: playlistName,
+                                ).then((_) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "Playlist $playlistName created"),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                });
+                                Provider.of<CustomPlaylistProvider>(context,
+                                        listen: false)
+                                    .getCustomPlaylistProvider();
+                              }
+                            },
+                            child: const Text("OK"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Close"),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    await addSongToPlaylist(
+                      playlistAudios: [currentSong],
+                      playlistId: playlistId!,
+                    ).then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Added to Playlist"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    });
+                    Provider.of<CustomPlaylistProvider>(context, listen: false)
+                        .getCustomPlaylistProvider();
+                    Provider.of<CustomAudiosProvider>(context, listen: false)
+                        .getCustomAudiosProvider(playlistId);
+                  }
+                },
+                items: [
+                  const DropdownMenuItem(
+                    value: "0",
+                    child: Text("Create new playlist",
+                        style: TextStyle(color: Colors.green)),
+                  ),
+                  ...List.generate(
+                    customPlaylistProvider.customPlaylists.length,
+                    (index) {
+                      return DropdownMenuItem(
+                        value: customPlaylistProvider
+                            .customPlaylists[index].playlistId,
+                        child: Text(customPlaylistProvider
+                            .customPlaylists[index].playlistName),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

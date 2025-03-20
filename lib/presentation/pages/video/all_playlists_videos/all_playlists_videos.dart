@@ -40,7 +40,6 @@ class AllPlaylistsVideos extends StatelessWidget {
                       "Favourites",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    trailing: PlaylistMoreOptionsVideo(showDelete: false, playlistId:  "favourite", playlistName: "Favourites"),
                   ),
                 ),
               ),

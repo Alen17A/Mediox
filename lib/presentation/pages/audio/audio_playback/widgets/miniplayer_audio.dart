@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mediox/presentation/pages/audio/audio_playback/audio_playback_test_provider.dart';
 import 'package:mediox/services/provider/audio/audio_playback_provider.dart';
 import 'package:mediox/services/provider/audio/recently_favourite_audios.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 class MiniplayerAudio extends StatelessWidget {
@@ -22,24 +23,24 @@ class MiniplayerAudio extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.only(bottom: 100, left: 10, right: 10),
         child: Container(
           height: 70,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               colors: [
-                Colors.purple,
-                Colors.blue
+                const Color.fromARGB(255, 161, 212, 163).withAlpha(127),
+                const Color.fromARGB(255, 22, 149, 26).withAlpha(127)
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black,
                 blurRadius: 8,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ],
           ),
@@ -50,15 +51,26 @@ class MiniplayerAudio extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(10),
+                  child: QueryArtworkWidget(
+                    id: currentSong.audioId,
+                    type: ArtworkType.AUDIO,
+                    artworkHeight: 50,
+                    artworkWidth: 50,
+                    artworkBorder: BorderRadius.circular(125),
+                    nullArtworkWidget: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Colors.green,
+                          Color.fromARGB(255, 20, 101, 22)
+                        ]),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.music_note,
+                          size: 30, color: Colors.white),
                     ),
-                    child: const Icon(Icons.music_note,
-                        color: Colors.white, size: 30),
+                    keepOldArtwork: true,
                   ),
                 ),
               ),

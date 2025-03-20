@@ -11,16 +11,20 @@ class MoreOptionsVideo extends StatelessWidget {
       {super.key,
       required this.videos,
       required this.index,
-      required this.playlistId});
+      required this.playlistId,
+      this.showDelete = true, this.inPlaylist = true});
 
   final List<VideoModel> videos;
   final int index;
   final String? playlistId;
+  final bool showDelete;
+  final bool inPlaylist;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
         itemBuilder: (context) => [
+            if(inPlaylist)
               PopupMenuItem(
                 child: TextButton.icon(
                   onPressed: () async {
@@ -40,7 +44,6 @@ class MoreOptionsVideo extends StatelessWidget {
                   },
                   label: const Text(
                     "Add to favourites",
-                    style: TextStyle(color: Colors.black),
                   ),
                   icon: const Icon(
                     Icons.favorite,
@@ -147,36 +150,37 @@ class MoreOptionsVideo extends StatelessWidget {
                   ),
                 ),
               ),
-              PopupMenuItem(
-                child: TextButton.icon(
-                  onPressed: () async {
-                    await removeVideosFromPlaylists(
-                            videoId: videos[index].videoId,
-                            playlistId: playlistId)
-                        .then((_) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "${videos[index].videoTitle} deleted successfully"),
-                        backgroundColor: Colors.green,
-                      ));
-                    });
-                    Provider.of<CustomVideosProvider>(context, listen: false)
-                        .getCustomVideosProvider(playlistId);
-                    Provider.of<RecentlyFavouriteVideosProvider>(context,
-                            listen: false)
-                        .getFavouritesVideosProvider();
-                  },
-                  label: const Text(
-                    "Delete",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
+              if (showDelete)
+                PopupMenuItem(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      await removeVideosFromPlaylists(
+                              videoId: videos[index].videoId,
+                              playlistId: playlistId)
+                          .then((_) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "${videos[index].videoTitle} deleted successfully"),
+                          backgroundColor: Colors.green,
+                        ));
+                      });
+                      Provider.of<CustomVideosProvider>(context, listen: false)
+                          .getCustomVideosProvider(playlistId);
+                      Provider.of<RecentlyFavouriteVideosProvider>(context,
+                              listen: false)
+                          .getFavouritesVideosProvider();
+                    },
+                    label: const Text(
+                      "Delete",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-              ),
             ]);
   }
 }

@@ -9,13 +9,14 @@ class MostlyPlayed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "Mostly Played";
     return Consumer<MostlyPlayedProvider>(
         builder: (context, mostlyProvider, _) {
       List<AudioModel> songs = mostlyProvider.filteredSongsMostly();
       if (songs.isEmpty) {
         return const Center(child: Text('No songs found.'));
       }
-      return AudioTile(songs: songs,);
+      return AudioTile(songs: songs, category: category,);
     });
   }
 }

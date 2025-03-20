@@ -9,6 +9,7 @@ class FavouritesAudio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String category = "Favourites";
     return Scaffold(
       appBar: AppBar(
         title: const Text("Favourites", style: TextStyle(fontWeight: FontWeight.bold),),
@@ -24,8 +25,10 @@ class FavouritesAudio extends StatelessWidget {
         List<AudioModel> songs = favouritesProvider.favouriteAudios;
         return AudioTile(
           songs: songs,
-          showMoreOptions: true,
           playlistId: "favourite",
+          category: category,
+          showMoreOptions: true,
+          inPlaylist: false,
         );
       }),
     );

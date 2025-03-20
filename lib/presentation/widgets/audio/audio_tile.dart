@@ -10,13 +10,16 @@ class AudioTile extends StatelessWidget {
   final bool showMoreOptions;
   final bool showDelete;
   final String? playlistId;
-  const AudioTile({
-    super.key,
-    required this.songs,
-    this.showMoreOptions = false,
-    this.showDelete = true,
-    this.playlistId,
-  });
+  final String? category;
+  final bool inPlaylist;
+  const AudioTile(
+      {super.key,
+      required this.songs,
+      this.showMoreOptions = false,
+      this.showDelete = true,
+      this.playlistId,
+      this.category,
+      this.inPlaylist = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +31,16 @@ class AudioTile extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () async {
-                  FocusScope.of(context).unfocus();
-                  await Future.delayed(const Duration(milliseconds: 210));
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AudioPlaybackTestProvider(
-                                audioFile: songs,
-                                index: index,
-                              )));
-                // Provider.of<AudioPlaybackProvider>(context, listen: false)
-                //     .startPlayback(songs[index]);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => AudioPlayback(
-                //               audioFile: songs,
-                //               index: index,
-                //             )));
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => AudioPlaybackTestProvider(
-                //               audioFile: songs,
-                //               index: index,
-                //             )));
+                FocusScope.of(context).unfocus();
+                await Future.delayed(const Duration(milliseconds: 210));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AudioPlaybackTestProvider(
+                              audioFile: songs,
+                              index: index,
+                              category: category,
+                            )));
               },
               child: Padding(
                 padding: const EdgeInsets.all(5),
@@ -90,8 +78,8 @@ class AudioTile extends StatelessWidget {
                               Text(
                                 songs[index].artist,
                                 style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Color.fromARGB(255, 226, 225, 225)),
+                                  fontSize: 10,
+                                ),
                               )
                             ],
                           ),
@@ -102,6 +90,7 @@ class AudioTile extends StatelessWidget {
                             playlistId: playlistId,
                             index: index,
                             showDelete: showDelete,
+                            inPlaylist: inPlaylist,
                           ),
                       ],
                     ),
@@ -112,7 +101,7 @@ class AudioTile extends StatelessWidget {
             const Divider(
               indent: 20,
               endIndent: 20,
-              color: Colors.white12,
+              // color: Colors.white12,
             )
           ],
         );

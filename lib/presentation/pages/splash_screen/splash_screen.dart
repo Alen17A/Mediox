@@ -56,8 +56,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> splash(BuildContext ctx) async {
-    await fetchMP3SongsWithHive();
     await fetchVideosWithHive();
+    await fetchMP3SongsWithHive();
     Provider.of<GetAudiosProvider>(context, listen: false).getAllAudios();
     Provider.of<RecentlyFavouriteAudiosProvider>(context, listen: false)
         .getRecentlySongsProvider();
