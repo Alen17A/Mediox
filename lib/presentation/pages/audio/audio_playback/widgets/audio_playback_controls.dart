@@ -281,7 +281,8 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                             inactiveColor:
                                 const Color.fromARGB(255, 80, 80, 80),
                             min: 0,
-                            max: audioPlaybackControls.totalDuration.inSeconds > 0
+                            max: audioPlaybackControls.totalDuration.inSeconds >
+                                    0
                                 ? audioPlaybackControls.totalDuration.inSeconds
                                     .toDouble()
                                 : 1.0,
@@ -296,7 +297,8 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                             onChanged: (value) {
                               final newPosition =
                                   Duration(seconds: value.toInt());
-                              audioPlaybackControls.audioPlayer.seek(newPosition);
+                              audioPlaybackControls.audioPlayer
+                                  .seek(newPosition);
                             },
                           ),
                           Padding(

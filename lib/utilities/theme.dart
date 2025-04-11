@@ -4,16 +4,16 @@ import 'package:mediox/utilities/colors.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
-    //colorScheme: ColorScheme(brightness: Brightness.light, primary: , onPrimary: onPrimary, secondary: secondary, onSecondary: onSecondary, error: error, onError: onError, surface: surface, onSurface: onSurface),
+      //colorScheme: ColorScheme(brightness: Brightness.light, primary: , onPrimary: onPrimary, secondary: secondary, onSecondary: onSecondary, error: error, onError: onError, surface: surface, onSurface: onSurface),
       brightness: Brightness.light,
       textTheme: GoogleFonts.ubuntuTextTheme(ThemeData.light().textTheme),
       primarySwatch: Colors.green);
 
   static final darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.darkAppBackground,
-    primaryColor: AppColors.darkSurface,
-    textTheme: GoogleFonts.ubuntuTextTheme(ThemeData.dark().textTheme)
-    //colorScheme: ColorScheme(brightness: brightness, primary: primary, onPrimary: onPrimary, secondary: secondary, onSecondary: onSecondary, error: error, onError: onError, surface: surface, onSurface: onSurface)
-  );
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: AppColors.darkAppBackground,
+      primaryColor: AppColors.darkSurface,
+      textTheme: GoogleFonts.ubuntuTextTheme(ThemeData.dark().textTheme)
+      //colorScheme: ColorScheme(brightness: brightness, primary: primary, onPrimary: onPrimary, secondary: secondary, onSecondary: onSecondary, error: error, onError: onError, surface: surface, onSurface: onSurface)
+      );
 }

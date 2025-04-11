@@ -7,13 +7,17 @@ import 'package:provider/provider.dart';
 class CustomAudios extends StatelessWidget {
   final String playlistName;
   final String playListId;
-  const CustomAudios({super.key, required this.playlistName, required this.playListId});
+  const CustomAudios(
+      {super.key, required this.playlistName, required this.playListId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(playlistName, style: const TextStyle(fontWeight: FontWeight.bold),),
+        title: Text(
+          playlistName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         elevation: 5,
         shadowColor: Colors.grey,
         surfaceTintColor: Colors.green,

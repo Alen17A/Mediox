@@ -12,7 +12,8 @@ class MoreOptionsVideo extends StatelessWidget {
       required this.videos,
       required this.index,
       required this.playlistId,
-      this.showDelete = true, this.inPlaylist = true});
+      this.showDelete = true,
+      this.inPlaylist = true});
 
   final List<VideoModel> videos;
   final int index;
@@ -24,33 +25,35 @@ class MoreOptionsVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
         itemBuilder: (context) => [
-            if(inPlaylist)
-              PopupMenuItem(
-                child: TextButton.icon(
-                  onPressed: () async {
-                    await addVideoToPlaylist(
-                            playlistVideos: [videos[index]],
-                            playlistName: "Favourites",
-                            playlistId: "favourite")
-                        .then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Added to favourites"),
-                        backgroundColor: Colors.green,
-                      ));
-                    });
-                    await Provider.of<RecentlyFavouriteVideosProvider>(context,
-                            listen: false)
-                        .getFavouritesVideosProvider();
-                  },
-                  label: const Text(
-                    "Add to favourites",
-                  ),
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
+              if (inPlaylist)
+                PopupMenuItem(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      await addVideoToPlaylist(
+                              playlistVideos: [videos[index]],
+                              playlistName: "Favourites",
+                              playlistId: "favourite")
+                          .then((_) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Added to favourites"),
+                          backgroundColor: Colors.green,
+                        ));
+                      });
+                      await Provider.of<RecentlyFavouriteVideosProvider>(
+                              context,
+                              listen: false)
+                          .getFavouritesVideosProvider();
+                    },
+                    label: const Text(
+                      "Add to favourites",
+                    ),
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-              ),
               PopupMenuItem(
                 child: Consumer<CustomPlaylistsVideosProvider>(
                   builder: (context, customPlaylistVideosProvider, _) =>

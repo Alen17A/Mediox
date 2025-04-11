@@ -23,7 +23,13 @@ class FavouritesVideo extends StatelessWidget {
           return const Center(child: Text('No favourites'));
         }
         List<VideoModel> videos = favouritesVideoProvider.favouriteVideos;
-        return GridViewVideos(videos: videos, playlistId: "favourite", showMoreOptions: true, inPlaylist: false, category: category,);
+        return GridViewVideos(
+          videos: videos,
+          playlistId: "favourite",
+          showMoreOptions: true,
+          inPlaylist: false,
+          category: category,
+        );
       }),
     );
   }

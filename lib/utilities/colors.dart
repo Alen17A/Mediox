@@ -11,7 +11,8 @@ class AppColors {
 
 class AppGradients {
   //Light theme
-  static const LinearGradient lightBackground = LinearGradient(colors: [Colors.white, Colors.green]);
+  static const LinearGradient lightBackground =
+      LinearGradient(colors: [Colors.white, Colors.green]);
   static const LinearGradient lightSurface =
       LinearGradient(colors: [Colors.black, Colors.green]);
 }

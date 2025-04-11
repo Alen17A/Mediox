@@ -16,7 +16,10 @@ class RecentlyAudios extends StatelessWidget {
       if (songs.isEmpty) {
         return const Center(child: Text('No recents found.'));
       }
-      return AudioTile(songs: songs, category: category,);
+      return AudioTile(
+        songs: songs,
+        category: category,
+      );
     });
   }
 }

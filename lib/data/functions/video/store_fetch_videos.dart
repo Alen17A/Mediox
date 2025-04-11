@@ -24,13 +24,13 @@ Future<void> fetchVideosWithHive() async {
   for (AssetEntity videoAsset in videoAssets) {
     if (!checkVideo(videoId: videoAsset.id)) {
       final File? file = await videoAsset.file;
-      final Uint8List? thumbnail = await VideoThumbnail.thumbnailData(video: file!.path);
+      final Uint8List? thumbnail =
+          await VideoThumbnail.thumbnailData(video: file!.path);
       var videoModel = VideoModel(
-        videoId: videoAsset.id,
-        videoTitle: videoAsset.title!,
-        videoPath: file.path,
-        thumbnail: thumbnail
-      );
+          videoId: videoAsset.id,
+          videoTitle: videoAsset.title!,
+          videoPath: file.path,
+          thumbnail: thumbnail);
       await videoBox.put(videoModel.videoId, videoModel);
     }
   }
@@ -51,7 +51,6 @@ Future<List<VideoModel>> getVideos() async {
 
   return videosList;
 }
-
 
 Future<List<VideoModel>> mostlyVideos() async {
   List<VideoModel> videos = [];

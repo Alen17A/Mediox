@@ -21,7 +21,9 @@ class GetVideosProvider extends ChangeNotifier {
       return allVideos;
     } else {
       return allVideos.where((video) {
-        return video.videoTitle.toLowerCase().contains(searchQuery.toLowerCase());
+        return video.videoTitle
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase());
       }).toList();
     }
   }

@@ -74,7 +74,7 @@ class MiniplayerAudio extends StatelessWidget {
                   ),
                 ),
               ),
-                
+
               // Song Info
               Expanded(
                 child: GestureDetector(
@@ -117,13 +117,12 @@ class MiniplayerAudio extends StatelessWidget {
                   ),
                 ),
               ),
-                
+
               // Playback Controls
               IconButton(
                 onPressed: () async {
                   playbackProvider.skipPrevious();
-                  await Provider.of<RecentlyFavouriteAudiosProvider>(
-                          context,
+                  await Provider.of<RecentlyFavouriteAudiosProvider>(context,
                           listen: false)
                       .getRecentlySongsProvider();
                 },
@@ -145,27 +144,25 @@ class MiniplayerAudio extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   playbackProvider.skipNext();
-                  await Provider.of<RecentlyFavouriteAudiosProvider>(
-                          context,
+                  await Provider.of<RecentlyFavouriteAudiosProvider>(context,
                           listen: false)
                       .getRecentlySongsProvider();
                 },
-                icon: const Icon(Icons.skip_next,
-                    size: 32, color: Colors.white),
+                icon:
+                    const Icon(Icons.skip_next, size: 32, color: Colors.white),
                 splashRadius: 25,
               ),
-                
+
               // Close Button (NEW)
               IconButton(
                 onPressed: () {
                   playbackProvider
                       .stopPlayback(); // Stop playback & hide mini player
                 },
-                icon:
-                    const Icon(Icons.close, size: 28, color: Colors.white),
+                icon: const Icon(Icons.close, size: 28, color: Colors.white),
                 splashRadius: 20,
               ),
-                
+
               const SizedBox(width: 10),
             ],
           ),

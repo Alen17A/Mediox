@@ -12,7 +12,8 @@ class MoreOptionsAudio extends StatelessWidget {
       required this.songs,
       required this.playlistId,
       required this.index,
-      this.showDelete = true, this.inPlaylist = true});
+      this.showDelete = true,
+      this.inPlaylist = true});
 
   final List<AudioModel> songs;
   final String? playlistId;
@@ -24,33 +25,35 @@ class MoreOptionsAudio extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
         itemBuilder: (context) => [
-            if(inPlaylist)
-              PopupMenuItem(
-                child: TextButton.icon(
-                  onPressed: () async {
-                    await addSongToPlaylist(
-                            playlistAudios: [songs[index]],
-                            playlistName: "Favourites",
-                            playlistId: "favourite")
-                        .then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Added to favourites"),
-                        backgroundColor: Colors.green,
-                      ));
-                    });
-                    await Provider.of<RecentlyFavouriteAudiosProvider>(context,
-                            listen: false)
-                        .getFavouritesProvider();
-                  },
-                  label: const Text(
-                    "Add to favourites",
-                  ),
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
+              if (inPlaylist)
+                PopupMenuItem(
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      await addSongToPlaylist(
+                              playlistAudios: [songs[index]],
+                              playlistName: "Favourites",
+                              playlistId: "favourite")
+                          .then((_) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Added to favourites"),
+                          backgroundColor: Colors.green,
+                        ));
+                      });
+                      await Provider.of<RecentlyFavouriteAudiosProvider>(
+                              context,
+                              listen: false)
+                          .getFavouritesProvider();
+                    },
+                    label: const Text(
+                      "Add to favourites",
+                    ),
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
-              ),
               PopupMenuItem(
                 child: Consumer<CustomPlaylistProvider>(
                   builder: (context, customPlaylistProvider, _) =>

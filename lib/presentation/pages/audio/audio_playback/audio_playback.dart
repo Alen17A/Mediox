@@ -79,7 +79,6 @@ class _AudioPlaybackState extends State<AudioPlayback> {
       audioPlayer.pause();
     } else {
       audioPlayer.play();
-      
     }
     setState(() {
       isPlaying = !isPlaying;
@@ -244,7 +243,10 @@ class _AudioPlaybackState extends State<AudioPlayback> {
                             height: 250,
                             decoration: const BoxDecoration(
                               // color: Colors.grey,
-                              gradient: LinearGradient(colors: [Colors.green, Color.fromARGB(255, 20, 101, 22)]),
+                              gradient: LinearGradient(colors: [
+                                Colors.green,
+                                Color.fromARGB(255, 20, 101, 22)
+                              ]),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.music_note,

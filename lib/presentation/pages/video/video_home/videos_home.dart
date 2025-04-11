@@ -30,9 +30,7 @@ class VideoHome extends StatelessWidget {
           surfaceTintColor: Colors.blue,
           title: const Row(
             children: [
-              Expanded(
-                child: VideosSearch()
-              ),
+              Expanded(child: VideosSearch()),
             ],
           ),
           toolbarHeight: 80,
@@ -69,10 +67,10 @@ class VideoHome extends StatelessWidget {
                 onPressed: () => Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const VideoHome())),
                 child: Image.asset(
-            gifMode,
-            width: 900,
-            height: 900,
-          ),
+                  gifMode,
+                  width: 900,
+                  height: 900,
+                ),
               )),
               ListTile(
                 title: const Text("Dark Mode"),
@@ -87,7 +85,7 @@ class VideoHome extends StatelessWidget {
               ListTile(
                 title: const Text("Sync Videos"),
                 trailing: const Icon(Icons.sync),
-                onTap: () async{
+                onTap: () async {
                   await fetchVideosWithHive();
                   Provider.of<GetVideosProvider>(context, listen: false)
                       .getAllVideos();
@@ -156,14 +154,15 @@ class VideoHome extends StatelessWidget {
         ),
         body: const Stack(
           children: [
-            TabBarView(
-              children: [
+            TabBarView(children: [
               AllVideos(),
               RecentlyVideos(),
               MostlyVideos(),
               AllPlaylistsVideos(),
             ]),
-            FloatingBottomNavBar(isVideo: true,),
+            FloatingBottomNavBar(
+              isVideo: true,
+            ),
           ],
         ),
       ),

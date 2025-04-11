@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mediox/data/models/audio/audio_model.dart';
 
-class AudioPlaybackControlsProvider extends ChangeNotifier{
+class AudioPlaybackControlsProvider extends ChangeNotifier {
   final AudioPlayer audioPlayer = AudioPlayer();
   late List<AudioModel> audioFiles;
   late int currentIndex;

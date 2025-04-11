@@ -19,7 +19,12 @@ class AllVideos extends StatelessWidget {
           child: Text("No Videos found"),
         );
       }
-      return GridViewVideos(videos: videos, showMoreOptions: true, showDelete: false, category: category,);
+      return GridViewVideos(
+        videos: videos,
+        showMoreOptions: true,
+        showDelete: false,
+        category: category,
+      );
     });
   }
 }

@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 class CustomVideos extends StatelessWidget {
   final String playlistName;
   final String playlistId;
-  const CustomVideos({super.key, required this.playlistName, required this.playlistId});
+  const CustomVideos(
+      {super.key, required this.playlistName, required this.playlistId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,12 @@ class CustomVideos extends StatelessWidget {
           return const Center(child: Text('No videos'));
         }
         List<VideoModel> videos = customVideosProvider.customVideos;
-        return GridViewVideos(videos: videos, playlistId: playlistId, showMoreOptions: true, category: playlistName,);
+        return GridViewVideos(
+          videos: videos,
+          playlistId: playlistId,
+          showMoreOptions: true,
+          category: playlistName,
+        );
       }),
     );
   }

@@ -45,57 +45,59 @@ class AudioTile extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
                     child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4, right: 4),
-                    child: Row(
-                      children: [
-                        QueryArtworkWidget(
-                          id: songs[index].audioId,
-                          type: ArtworkType.AUDIO,
-                          nullArtworkWidget: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromARGB(255, 160, 199, 171)),
-                            child: const Icon(Icons.music_note),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                songs[index].title,
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4, right: 4),
+                        child: Row(
+                          children: [
+                            QueryArtworkWidget(
+                              id: songs[index].audioId,
+                              type: ArtworkType.AUDIO,
+                              nullArtworkWidget: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color.fromARGB(255, 160, 199, 171)),
+                                child: const Icon(Icons.music_note),
                               ),
-                              Text(
-                                songs[index].artist,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    songs[index].title,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    songs[index].artist,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            if (showMoreOptions)
+                              MoreOptionsAudio(
+                                songs: songs,
+                                playlistId: playlistId,
+                                index: index,
+                                showDelete: showDelete,
+                                inPlaylist: inPlaylist,
+                              ),
+                          ],
                         ),
-                        if (showMoreOptions)
-                          MoreOptionsAudio(
-                            songs: songs,
-                            playlistId: playlistId,
-                            index: index,
-                            showDelete: showDelete,
-                            inPlaylist: inPlaylist,
-                          ),
-                      ],
-                    ),
-                  ),
-                )),
+                      ),
+                    )),
               ),
             ),
             const Divider(

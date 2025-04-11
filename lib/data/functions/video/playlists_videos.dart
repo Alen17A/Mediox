@@ -10,7 +10,7 @@ Future<void> addVideoToPlaylist(
     {String? playlistId,
     List<VideoModel>? playlistVideos,
     String? playlistName}) async {
-playlistVideos ??= [];
+  playlistVideos ??= [];
 
   if (playlistId == null) {
     //For custom playlists when creating for first time
@@ -38,7 +38,7 @@ playlistVideos ??= [];
       videoPlaylistModel.playlistVideos.clear();
 
       videoPlaylistModel.playlistVideos.addAll(temp + playlistVideos);
-    
+
       await playlistModelVideoBox.put(playlistId, videoPlaylistModel);
     } else {
       VideoPlaylistModel playlistModel = VideoPlaylistModel(
@@ -108,7 +108,6 @@ Future<List<VideoPlaylistModel>> getVideosPlaylists() async {
   return playlists;
 }
 
-
 Future<void> removeVideosFromPlaylists(
     {required String videoId, required String? playlistId}) async {
   // get existing playListmodel
@@ -147,26 +146,16 @@ Future<void> updatePlaylistVideo(
 }
 
 Future<void> deletePlaylistVideo({required String? playlistId}) async {
-
   if (playlistId != null) {
     await playlistModelVideoBox.delete(playlistId);
   }
 }
 
-
-
-
-
-
-
-
-
-  // VideoPlaylistModel playlistModel = VideoPlaylistModel(
-      //     //Add videos of videoPlaylistModel and that playlist which is get.
-      //     playlistId: playlistId,
-      //     playlistName: playlistName,
-      //     playlistVideos: [
-      //       ...playlistVideos,
-      //       ...videoPlaylistModel.playlistVideos
-      //     ]);
-
+// VideoPlaylistModel playlistModel = VideoPlaylistModel(
+//     //Add videos of videoPlaylistModel and that playlist which is get.
+//     playlistId: playlistId,
+//     playlistName: playlistName,
+//     playlistVideos: [
+//       ...playlistVideos,
+//       ...videoPlaylistModel.playlistVideos
+//     ]);

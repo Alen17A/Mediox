@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 part 'audio_model.g.dart';
 
 @HiveType(typeId: 1)
-class AudioModel extends HiveObject{
+class AudioModel extends HiveObject {
   @HiveField(0)
   final String audioPath;
 
@@ -21,12 +21,11 @@ class AudioModel extends HiveObject{
   @HiveField(5)
   int playCount;
 
-  AudioModel({
-    required this.audioPath,
-    required this.title,
-    required this.artist,
-    required this.totalDuration,
-    required this.audioId,
-    this.playCount = 0
-  });
+  AudioModel(
+      {required this.audioPath,
+      required this.title,
+      required this.artist,
+      required this.totalDuration,
+      required this.audioId,
+      this.playCount = 0});
 }

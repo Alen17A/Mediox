@@ -13,7 +13,10 @@ class VideoPlayback extends StatefulWidget {
   final int videoIndex;
   String? category;
   VideoPlayback(
-      {super.key, required this.playbackVideos, required this.videoIndex, this.category});
+      {super.key,
+      required this.playbackVideos,
+      required this.videoIndex,
+      this.category});
 
   @override
   State<VideoPlayback> createState() => _VideoPlaybackState();
@@ -133,8 +136,8 @@ class _VideoPlaybackState extends State<VideoPlayback> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
           title: Text(
             widget.category ??= "",
             style: const TextStyle(color: Colors.white),
@@ -230,11 +233,12 @@ class _VideoPlaybackState extends State<VideoPlayback> {
                 children: [
                   Consumer<RecentlyFavouriteVideosProvider>(
                     builder: (context, isFavouriteProvider, _) {
-                      bool isFav =
-                          isFavouriteProvider.isFavourite(widget.playbackVideos[currentIndex].videoId);
+                      bool isFav = isFavouriteProvider.isFavourite(
+                          widget.playbackVideos[currentIndex].videoId);
                       return IconButton(
                         onPressed: () {
-                          isFavouriteProvider.toggleFavourites(widget.playbackVideos[currentIndex]);
+                          isFavouriteProvider.toggleFavourites(
+                              widget.playbackVideos[currentIndex]);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(isFav
@@ -252,7 +256,8 @@ class _VideoPlaybackState extends State<VideoPlayback> {
                       );
                     },
                   ),
-                  AddToPlaylistVideos(videos: widget.playbackVideos[currentIndex]),
+                  AddToPlaylistVideos(
+                      videos: widget.playbackVideos[currentIndex]),
                   // IconButton(
                   //     onPressed: () {
                   //       showAddToPlaylistDialog(context, currentSong);

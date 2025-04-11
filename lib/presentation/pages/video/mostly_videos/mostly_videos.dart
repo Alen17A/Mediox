@@ -16,7 +16,10 @@ class MostlyVideos extends StatelessWidget {
       if (videos.isEmpty) {
         return const Center(child: Text('No videos found'));
       }
-      return GridViewVideos(videos: videos, category: category,);
+      return GridViewVideos(
+        videos: videos,
+        category: category,
+      );
     });
   }
 }

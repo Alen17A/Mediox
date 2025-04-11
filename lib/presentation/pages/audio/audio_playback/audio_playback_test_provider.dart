@@ -63,7 +63,8 @@ class _AudioPlaybackState extends State<AudioPlaybackTestProvider> {
           widget.category ??= "",
           style: const TextStyle(color: Colors.white),
         ),
-        iconTheme: const IconThemeData(color: Color.fromARGB(255, 194, 192, 192)),
+        iconTheme:
+            const IconThemeData(color: Color.fromARGB(255, 194, 192, 192)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),

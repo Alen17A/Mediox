@@ -27,10 +27,8 @@ Future<void> addSongToPlaylist(
         .get(playlistId); //If a playlist already exists, get its id.
 
     if (audioPlaylistModel != null) {
-      
       //If the audioPlaylistModel already contains some audios,
       for (AudioModel playlistAudio in playlistAudios) {
-
         //playlistAudios = Audios of the playlist that is get.
         audioPlaylistModel.playlistAudios.removeWhere(
 
@@ -158,22 +156,13 @@ Future<void> deletePlaylist({required String? playlistId}) async {
   }
 }
 
-
-
-
-
-
-
-
-
-
 // AudioPlaylistModel playlistModel = AudioPlaylistModel(
-      //     //Add audios of audioPlaylistModel and that playlist which is get.
-      //     playlistId: playlistId,
-      //     playlistAudios: [
-      //       ...playlistAudios,
-      //       ...audioPlaylistModel.playlistAudios
-      //     ]);
+//     //Add audios of audioPlaylistModel and that playlist which is get.
+//     playlistId: playlistId,
+//     playlistAudios: [
+//       ...playlistAudios,
+//       ...audioPlaylistModel.playlistAudios
+//     ]);
 
 // Future<void> deleteAudios(
 //     {required int audioId, required String? playlistId}) async {}

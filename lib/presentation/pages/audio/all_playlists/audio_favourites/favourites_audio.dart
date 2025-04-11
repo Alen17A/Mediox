@@ -12,7 +12,10 @@ class FavouritesAudio extends StatelessWidget {
     const String category = "Favourites";
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Favourites", style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          "Favourites",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         elevation: 5,
         shadowColor: Colors.grey,
         surfaceTintColor: Colors.red,

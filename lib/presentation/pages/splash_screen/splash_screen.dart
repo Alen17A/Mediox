@@ -33,9 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
         ? "assets/gifs/MEDIOX_dark_bg_removed.gif"
         : "assets/gifs/MEDIOX_light_bg_removed.gif";
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
+      body: Stack(children: [
+        Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.green, Colors.white],
@@ -44,14 +43,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         ),
-          Center(
+        Center(
           child: Image.asset(
             gifMode,
             width: 900,
             height: 900,
           ),
-        ),]
-      ),
+        ),
+      ]),
     );
   }
 

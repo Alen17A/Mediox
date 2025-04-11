@@ -10,10 +10,11 @@ class VideosSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allVideoProvider = Provider.of<GetVideosProvider>(context);
-    final recentVideoProvider = Provider.of<RecentlyFavouriteVideosProvider>(context);
+    final recentVideoProvider =
+        Provider.of<RecentlyFavouriteVideosProvider>(context);
     final mostlyVideoProvider = Provider.of<MostlyVideosProvider>(context);
-    final favoriteVideoProvider = Provider.of<RecentlyFavouriteVideosProvider>(context);
-
+    final favoriteVideoProvider =
+        Provider.of<RecentlyFavouriteVideosProvider>(context);
 
     return SearchBar(
       leading: const Icon(Icons.search),

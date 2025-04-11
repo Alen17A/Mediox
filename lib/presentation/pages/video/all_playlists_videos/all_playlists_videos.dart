@@ -52,14 +52,20 @@ class AllPlaylistsVideos extends StatelessWidget {
                       onTap: () {
                         Provider.of<CustomVideosProvider>(context,
                                 listen: false)
-                            .getCustomVideosProvider(customPlaylistVideosProvider
-                                .customPlaylistsVideos[index].playlistId);
+                            .getCustomVideosProvider(
+                                customPlaylistVideosProvider
+                                    .customPlaylistsVideos[index].playlistId);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => CustomVideos(
-                                    playlistName: customPlaylistVideosProvider
-                                        .customPlaylistsVideos[index].playlistName, playlistId: customPlaylistVideosProvider.customPlaylistsVideos[index].playlistId,)));
+                                      playlistName: customPlaylistVideosProvider
+                                          .customPlaylistsVideos[index]
+                                          .playlistName,
+                                      playlistId: customPlaylistVideosProvider
+                                          .customPlaylistsVideos[index]
+                                          .playlistId,
+                                    )));
                       },
                       child: Card(
                         elevation: 5,
@@ -71,14 +77,17 @@ class AllPlaylistsVideos extends StatelessWidget {
                                 .customPlaylistsVideos[index].playlistName,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          trailing: PlaylistMoreOptionsVideo(playlistId: customPlaylistVideosProvider
-                                  .customPlaylistsVideos[index].playlistId, playlistName: customPlaylistVideosProvider
-                                        .customPlaylistsVideos[index].playlistName),
+                          trailing: PlaylistMoreOptionsVideo(
+                              playlistId: customPlaylistVideosProvider
+                                  .customPlaylistsVideos[index].playlistId,
+                              playlistName: customPlaylistVideosProvider
+                                  .customPlaylistsVideos[index].playlistName),
                         ),
                       ),
                     );
                   },
-                  itemCount: customPlaylistVideosProvider.customPlaylistsVideos.length,
+                  itemCount:
+                      customPlaylistVideosProvider.customPlaylistsVideos.length,
                   shrinkWrap: true,
                 );
               })
